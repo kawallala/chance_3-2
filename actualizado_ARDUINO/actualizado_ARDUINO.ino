@@ -148,7 +148,7 @@ void loop(){
       motorFree();
       delay(100);
       motorMove(MOTOR_DIR_FORWARD);
-      Serial.println("Fd")
+      Serial.println("Fd");
     }
     else if (c=="Bd"){
       motorFree();
@@ -175,14 +175,18 @@ void loop(){
     else if(c == "AC"){
       x = analogRead(0);       // read analog input pin 0
       y = analogRead(1);       // read analog input pin 1
-      z = analogRead(2);       // read analog input pin 1
+      z = analogRead(2);      // read analog input pin 1
+      float xx= map(x,0,1023,45.0,-45.0);
+      float yy= map(y,0,1023,45.0,-45.0);
+      float zz= map(z,0,1023,45.0,-45.0);
       String a;
-      a = '[' + String(x) + 'X' + ',' + String(y) + 'Y' + ',' + String(z) + 'Z' +']' ; 
+      a = '[' + String(int(xx*100)) + 'X' + ',' + String(int(yy*100)) + 'Y' + ',' + String(int(zz*100)) + 'Z' +']' ; 
       Serial.println(a);
       
     }
     else if(c == "TP"){
-      tempC = analogRead(pinLM35);   
+      int tempC; String temp;
+      tempC = analogRead(A3);   
       tempC = (5.0 * tempC * 100.0)/1024.0;
       temp = '[' + String(tempC) + ']' ;
       Serial.println(temp);
