@@ -93,26 +93,20 @@ acce.pack(side=LEFT)
 marco5 = Frame(vent)
 marco5.pack(side=LEFT)
 
-hora = Label(marco5, text="Tiempo =" )
-hora.pack(side=LEFT)
+temperatura = Label(marco5, text="Temperatura=" )
+temperatura.pack(side=LEFT)
 
-rolex = Label(marco5, text="")
-rolex.pack(side=LEFT)
+temper = Label(marco5,text="")
+temper.pack(side=LEFT)
 
 marco6 = Frame(vent)
 marco6.pack()
 
-si2 = Button(marco6, text="Prender",command=prender2)
-si2.pack(side=LEFT)
+hora = Label(marco6, text="Tiempo =" )
+hora.pack(side=LEFT)
 
-no2 = Button(marco6, text="Apagar",command=apagar2)
-no2.pack(side=LEFT)
-
-temperatura = Label(marco6, text="Temperatura=" )
-temperatura.pack(side=LEFT)
-
-temper = Label(marco6,text="")
-temper.pack(side=LEFT)
+rolex = Label(marco6, text="")
+rolex.pack(side=LEFT)
  
 tiles_letter = ['']
 
@@ -123,8 +117,27 @@ def add_letter():
      rolex.config(text=rand)
      vent.after(500, add_letter)
 
-def lectura():
+
+def todo():
      if pto == 1:
+          ser.write("AC.")
+          a = "["
+          if ser.read() == '[':
+               while 1:
+                    if ser.read() == '}':
+                         break
+                    a = a + ser.read()
+                    print a + '}'
+               a = a + ']'
+               acce.config(text=a)
+          vent.after(100,todo)
+     if pto == 0:
+          temper.config(text="Desactivado")
+          acce.config(text="Desactivado")
+          vent.after(100,todo)
+
+def lectura():
+     if pto == 3:
           ser.write("AC.")
           a = '['
           if ser.read() == '[':          
@@ -132,29 +145,30 @@ def lectura():
                     a = a + ser.read()
                acce.config(text=a)
           vent.after(1000, lectura)
-     if pto == 0:
+     if pto == 4:
           acce.config(text="Desactivado")
           vent.after(1000, lectura)
 
 def temp():
-     if tem == 1:
+     if pto == 2:
           ser.write("TP.")
           a = ""
-          if ser.read() == '[':
+          if ser.read() == '{':
                for x in range(0,10):
-                    if ser.read() == ']':
+                    if ser.read() == '}':
                          break
                     a = a + ser.read()
                a = a + '°'
                temper.config(text=a)
           vent.after(1000,temp)
-     if pto == 0:
+     if pto == 4:
           temper.config(text="Desactivado")
           vent.after(1000, temp)
 
-     
+          
 vent.after(0, add_letter)  
-vent.after(1000, lectura)  
-vent.after(1000,temp)
+#vent.after(1000, lectura)  
+#vent.after(1000,temp)
+vent.after(100,todo)
 
 vent.mainloop()
