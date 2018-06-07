@@ -11,22 +11,23 @@ Control de motores de CC con CI L298
 
 #define MOTOR_CTR1  5   // I1 Input 2
 #define MOTOR_PWM1  6  //  
-#define MOTOR_CTR2  7 //    I2 Input 2
-
- 
+#define MOTOR_CTR2  7 //    I2 Input 2 
 
 #define MOTOR_DIR_FORWARD  0   // Adelante
 #define MOTOR_DIR_BACKWARD  1  // Atras
 
 #define MOTOR_DIR_RIGHT  0   // Adelante
 #define MOTOR_DIR_LEFT  1  // Atras
-int v=255;
+
+int v=255; //velocidad
 
 String inputString = "";       
 boolean stringComplete = false;
 String c;
+String msj; //mensaje pi
+String Status = "Detenido"; //Estado de motores
 
-int x, y, z;
+int acelx, acely, acelz;  //aceleraciones por eje
 
 void setup(){
    // Configuracion de pines para control del motor
@@ -41,11 +42,10 @@ void setup(){
    pinMode(MOTOR_CTR1,OUTPUT);
    pinMode(MOTOR_CTR2,OUTPUT);
    pinMode(MOTOR_PWM1,OUTPUT);
-   Serial.begin(9600);
+   Serial.begin(115200);
    
    //
    inputString.reserve(200);
-   Serial.println('xx,yy,zz');
    
    
 }
@@ -139,8 +139,7 @@ void loop(){
   
   setSpeed(v);
   
-  if (stringComplete){
-    
+  if (stringComplete){   
     
     c = inputString.substring(0,2);
     
@@ -148,58 +147,64 @@ void loop(){
       motorFree();
       delay(100);
       motorMove(MOTOR_DIR_FORWARD);
-      Serial.println("Fd");
+      //Serial.println("Fd");
+      Status = "Avanzando";
     }
     else if (c=="Bd"){
       motorFree();
       delay(100);
       motorMove(MOTOR_DIR_BACKWARD);;
-      Serial.println("Bd");
+      //Serial.println("Bd");
+      Status = "Retrocediendo";
     }
     else if(c=="Lf"){
       motorFree();
       delay(100);
       turnAngle(MOTOR_DIR_LEFT);
-      Serial.println("Lf");
+      //Serial.println("Lf");
+      Status = "Izquierda";
     }
     else if(c=="Rt"){
       motorFree();
       delay(100);
       turnAngle(MOTOR_DIR_RIGHT);
-      Serial.println("Rt");
+      //Serial.println("Rt");
+      Status = "Derecha";
     }
     else if(c=="St"){
       motorStop();  
-      Serial.println("St");
+      //Serial.println("St");
+      Status = "Detenido";
     }
-    else if(c == "AC"){
+    else if(c == "Se"){
       
-      //Acelerometro
+       //Acelerometro
       
-      x = analogRead(0);       // read analog input pin 0
-      y = analogRead(1);       // read analog input pin 1
-      z = analogRead(2);      // read analog input pin 1
-      float xx= map(x,0,1023,45.0,-45.0);
-      float yy= map(y,0,1023,45.0,-45.0);
-      float zz= map(z,0,1023,45.0,-45.0);
-      String a;
-      a = '[' + String(int(xx)) + 'X' + ',' + String(int(yy)) + 'Y' + ',' + String(int(zz)) + 'Z' +']' ; 
-      Serial.println(a); 
+      acelx = analogRead(0);       // read analog input pin 0
+      acely = analogRead(1);       // read analog input pin 1
+      acelz = analogRead(2);      // read analog input pin 1
+      float xx= map(acelx,0,1023,45.0,-45.0);
+      float yy= map(acely,0,1023,45.0,-45.0);
+      float zz= map(acelz,0,1023,45.0,-45.0);
       
-    }
-    else if(c == "TP"){
-      int tempC; String temp;
-      tempC = analogRead(3);   
-      tempC = (5.0 * tempC * 100.0)/1024.0;
-      temp = '[' + String(tempC) + ']' ;
-     Serial.println(temp);
+      //temperatura
+      
+      //int tempC; String temp;
+      //tempC = analogRead(3);   
+      //tempC = (5.0 * tempC * 100.0)/1024.0;
+      //temp = '[' + String(tempC) + ']' ;
+      
+      //mensaje
+      
+      msj = '[' + String(int(xx)) + 'X' + ',' + String(int(yy)) + 'Y' + ',' + String(int(zz)) + 'z' + ':' + Status + ']' ; 
+      Serial.print(msj); 
+      
     }
     
     inputString = "";
     c = "";
     stringComplete = false;
-  }
-  
+  }  
 }
 
 
