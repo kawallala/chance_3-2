@@ -151,9 +151,9 @@ void loop(){
       Status = "Avanzando";
     }
     else if (c=="Bd"){
-      motorFree();
+      motorFree();>
       delay(100);
-      motorMove(MOTOR_DIR_BACKWARD);;
+      motorMove(MOTOR_DIR_BACKWARD);
       //Serial.println("Bd");
       Status = "Retrocediendo";
     }
@@ -189,14 +189,14 @@ void loop(){
       
       //temperatura
       
-      //int tempC; String temp;
-      //tempC = analogRead(3);   
-      //tempC = (5.0 * tempC * 100.0)/1024.0;
-      //temp = '[' + String(tempC) + ']' ;
+      int tempC; String temp;
+      tempC = analogRead(3);   
+      tempC = tempC * 0.48828125;
+      temp = String(tempC);
       
       //mensaje
       
-      msj = '[' + String(int(xx)) + 'X' + ',' + String(int(yy)) + 'Y' + ',' + String(int(zz)) + 'z' + ':' + Status + ']' ; 
+      msj = '[' + String(int(xx)) + 'X' + ',' + String(int(yy)) + 'Y' + ',' + String(int(zz)) + 'z' + ',' + Status + ',' + temp + ']' ; 
       Serial.print(msj); 
       
     }
