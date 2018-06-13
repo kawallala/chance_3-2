@@ -9,5 +9,5 @@ print("Test client sending packets to IP {0}, via port {1}\n".format(SERVER_IP, 
 mySocket = socket( AF_INET, SOCK_DGRAM )
 
 while True:
-     mySocket.sendto( 'cool',(SERVER_IP,POT_NUMBER))
+     mySocket.sendto( 'cool',(SERVER_IP,PORT_NUMBER))
 sys.ext()
