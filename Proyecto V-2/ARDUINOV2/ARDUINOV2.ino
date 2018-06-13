@@ -151,7 +151,7 @@ void loop(){
       Status = "Avanzando";
     }
     else if (c=="Bd"){
-      motorFree();>
+      motorFree();
       delay(100);
       motorMove(MOTOR_DIR_BACKWARD);
       //Serial.println("Bd");

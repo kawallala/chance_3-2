@@ -2,8 +2,8 @@ from serial import*
 from time import *
 import thread
 
-def mostrar_sensores(delay):
-     sleep(delay)
+def mostrar_sensores():
+     #sleep(delay)
      ser.write("Se.")
      accion = ser.read()
      b = "["
