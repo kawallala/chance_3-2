@@ -1,5 +1,6 @@
+
+import socket 
 import sys
-from socket import socket, AF_INET, SOCK_DGRAM
 
 ##---------------------------------------------------------------------##
 
@@ -10,16 +11,19 @@ import random
 
 ##---------------------------------------------------------------------##
 
+HOST='192.168.43.46'
+PORT=5000
 SERVER_IP = '192.168.43.46'
 PORT_NUMBER = 5000
 SIZE = 1024
 
-print("Test client sending packets to IP {0}, via port {1}\n".format(SERVER_IP, PORT_NUMBER))
 
-mySocket = socket( AF_INET, SOCK_DGRAM )
+s= socket.socket( socket.AF_INET, socket.SOCK_STREAM ) 
+s.connect(( HOST, PORT ))
 
-tinicial= int(time())
+mySocket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 
+tinicial = int(time())
 
 
 def fd():
@@ -130,4 +134,6 @@ vent.after(0, add_letter)
 
 vent.mainloop()
 
-sys.ext()
+
+            
+s.close()
