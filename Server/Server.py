@@ -15,7 +15,6 @@ print("Test server listening on port {0}\n".format(PORT_NUMBER))
 print("connected by", addr)
 while True:
      (data,addr) = mySocket.recvfrom(SIZE)
-     #mySocket.sendall(bytes('hola'),'utf-8')
      print data
      
 sys.ext()
