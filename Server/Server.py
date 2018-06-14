@@ -2,7 +2,6 @@ import socket
 import sys
 PORT_NUMBER = 5000
 SIZE = 1024
-CLIENT_IP = '192.168.43.154'
 
 hostName = socket.gethostbyname( '0.0.0.0' )
 
@@ -15,7 +14,6 @@ print("Test server listening on port {0}\n".format(PORT_NUMBER))
 print("connected by", addr)
 while True:
      (data,addr) = mySocket.recvfrom(SIZE)
-     print data
-     
+     print data     
 sys.ext()
 
