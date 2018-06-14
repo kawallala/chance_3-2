@@ -1,7 +1,7 @@
 import socket
 
 host = ''
-port = 5560
+port = 5500
 
 storedValue = 'what up'
 
