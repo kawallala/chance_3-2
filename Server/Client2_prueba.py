@@ -12,16 +12,15 @@ import random
 ##---------------------------------------------------------------------##
 
 HOST='192.168.43.46'
-PORT=5000
+PORT=5002
 SERVER_IP = '192.168.43.46'
-PORT_NUMBER = 5000
+PORT_NUMBER = 5002
 SIZE = 1024
 
 
-s= socket.socket( socket.AF_INET, socket.SOCK_STREAM ) 
-s.connect(( HOST, PORT ))
+mySocket= socket.socket( socket.AF_INET, socket.SOCK_STREAM ) 
+mySocket.connect(( HOST, PORT ))
 
-mySocket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 
 tinicial = int(time())
 
@@ -114,7 +113,10 @@ def add_letter():
      tiempo = str( int(time()) - tinicial -1)
      rand = random.choice(tiles_letter) + tiempo
      rolex.config(text=rand)
+     
      vent.after(500, add_letter)
+     
+
 
 #def lectura():
 #    if pto == 1:
