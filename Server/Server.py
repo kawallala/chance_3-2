@@ -1,20 +1,16 @@
-from socket import socket, gethostbyname, AF_INET, SOCK_DGRAM
+import socket 
 import sys
 PORT_NUMBER = 5000
 SIZE = 1024
-CLIENT_IP = '192.168.43.154'
-
-hostName = gethostbyname( '0.0.0.0' )
-
-mySocket = socket( AF_INET, SOCK_DGRAM )
-mySocket.bind( (hostName, PORT_NUMBER) )
-
+hostName = socket.gethostbyname( '0.0.0.0' )
+mySocket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
+mySocket.bind((hostName, PORT_NUMBER))
+mySocket.listen(1)
+conn, addr = mySocket.accept()
 print("Test server listening on port {0}\n".format(PORT_NUMBER))
-
+print("connected by", addr)
 while True:
      (data,addr) = mySocket.recvfrom(SIZE)
-     #mySocket.sendall(bytes('hola'),'utf-8')
-     print data
-     
+     print(data)
 sys.ext()
 
