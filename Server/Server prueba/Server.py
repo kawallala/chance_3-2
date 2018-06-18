@@ -15,8 +15,8 @@ def setupServer():
     print('socket bind complete')
     return s
 
-def setupConnection():
-    s.listen(1) #una sola persona en cualquier momento
+def setupConnection(s):
+    s.listen(2) #una sola persona en cualquier momento
     conn, address = s.accept()
     print("Conectado a: " + address[0] + ":" + str(address[1]))
     return conn
@@ -59,7 +59,7 @@ s = setupServer()
 
 while True:
     try:
-        conn = setupConnection()
+        conn = setupConnection(s)
         dataTransfer(conn)
     except:
         break
