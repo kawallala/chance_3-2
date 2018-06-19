@@ -196,7 +196,7 @@ void loop(){
       
       //mensaje
       
-      msj = '[' + String(int(xx)) + 'X' + ',' + String(int(yy)) + 'Y' + ',' + String(int(zz)) + 'z' + ',' + Status + ',' + temp + ']' ; 
+      msj = '[' + String(int(xx)) + 'X' + ',' + String(int(yy)) + 'Y' + ',' + String(int(zz)) + 'z' + '/' + Status + '/' + temp + ']' ; 
       Serial.print(msj); 
       
     }
