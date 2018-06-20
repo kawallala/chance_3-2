@@ -1,8 +1,10 @@
 import socket
+from serial import *
+import sys
 
 host = ''
-port = 5500
-
+port = 10003
+ser = Serial('/dev/ttyACM0', 115200)
 storedValue = 'what up'
 
 def setupServer():
@@ -21,12 +23,18 @@ def setupConnection():
     print("Conectado a: " + address[0] + ":" + str(address[1]))
     return conn
 
-def GET():
-    reply = storedValue
-    return reply
+def readSerial():
+     ser.write("Se.")
+     accion = ser.read()
+     b = "["
+     if accion == "[":
+          while accion != "]":
+               accion= ser.read()
+               b = b + accion
+          ser.flush()
+     print (b)
+     return b
 
-def REPEAT(dataMessage):
-    reply = dataMessage[1]
 
 def dataTransfer(conn):
     #lo que hay aqui recibe y envia datos
@@ -34,26 +42,31 @@ def dataTransfer(conn):
         #recibo datos
         data = conn.recv(1024)
         data = data.decode('utf-8')
-        #separamos los datos, para separar el comando del resto de los datos
-        dataMessage = data.split(' ',1)
-        command = dataMessage[0]
-        if command == 'GET':
-            reply = GET()
-        elif command == 'REPEAT':
-            reply = REPEAT(dataMessage)
-        elif command == 'EXIT':
-            print("our client has left us")
-            break
-        elif command == 'KILL':
-            print("Our server is shutting down.")
+        print(data)
+        if data == '':
+            print 'Cerrando servidor'
+            conn.close()
             s.close()
             break
-        else:
-            reply = 'Unknown Comannd'
-        #enviar la respuesta
-        conn.sendall(str.encode(reply))
+        elif data == 'Fd.':
+            ser.write('Fd.')
+        elif data == 'Lf.':
+            ser.write('Lf.')
+        elif data == 'Rt.':
+            ser.write('Rt.')
+        elif data == 'St.':
+            ser.write('St.')
+        elif data == 'Bd.':
+            ser.write('Bd.')
+        elif data == 'Se.':
+            datos = readSerial()
+            conn.sendall(str.encode(datos))
+        elif data == 'CLOSE':
+            print 'Cliente desconectado'
+            conn.close()
+            s.close()
+        #separamos los datos, para separar el comando del resto de los datos
         print("Data has been sent!")
-    conn.close()
 
 s = setupServer()
 
@@ -62,5 +75,8 @@ while True:
         conn = setupConnection()
         dataTransfer(conn)
     except:
+        conn.close()
+        s.close()
+        sys.exit()
         break
 

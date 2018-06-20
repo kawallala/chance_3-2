@@ -25,7 +25,7 @@ String inputString = "";
 boolean stringComplete = false;
 String c;
 String msj; //mensaje pi
-String Status = "Detenido"; //Estado de motores
+int Status = 5; //Estado de motores
 
 int acelx, acely, acelz;  //aceleraciones por eje
 
@@ -148,55 +148,49 @@ void loop(){
       delay(100);
       motorMove(MOTOR_DIR_FORWARD);
       //Serial.println("Fd");
-      Status = "Avanzando";
+      Status = 8;
     }
     else if (c=="Bd"){
       motorFree();
       delay(100);
       motorMove(MOTOR_DIR_BACKWARD);
       //Serial.println("Bd");
-      Status = "Retrocediendo";
+      Status = 2;
     }
     else if(c=="Lf"){
       motorFree();
       delay(100);
       turnAngle(MOTOR_DIR_LEFT);
       //Serial.println("Lf");
-      Status = "Izquierda";
+      Status = 4;
     }
     else if(c=="Rt"){
       motorFree();
       delay(100);
       turnAngle(MOTOR_DIR_RIGHT);
       //Serial.println("Rt");
-      Status = "Derecha";
+      Status = 6;
     }
     else if(c=="St"){
       motorStop();  
       //Serial.println("St");
-      Status = "Detenido";
+      Status = 5;
     }
     else if(c == "Se"){
       
        //Acelerometro
       
-      acelx = analogRead(0);       // read analog input pin 0
-      acely = analogRead(1);       // read analog input pin 1
-      acelz = analogRead(2);      // read analog input pin 1
-      float xx= map(acelx,0,1023,45.0,-45.0);
-      float yy= map(acely,0,1023,45.0,-45.0);
-      float zz= map(acelz,0,1023,45.0,-45.0);
-      
-      //temperatura
-      
+      acelx = analogRead(0);
+      acelx = analogRead(0);      
+      acely = analogRead(1); 
+      acely = analogRead(1);      
+      acelz = analogRead(2);      
+      acelz = analogRead(2);           
+      //temperatura      
       int tempC; String temp;
-      tempC = analogRead(3);   
-      tempC = tempC * 0.48828125;
-      temp = String(tempC);
+      tempC = analogRead(3);
       
-      //mensaje
-      
-      msj = '[' + String(int(xx)) + 'X' + ',' + String(int(yy)) + 'Y' + ',' + String(int(zz)) + 'z' + ',' + Status + ',' + temp + ']' ; 
+      msj = '[' + String(acelx) + ';' + String(acely) + ';' + String(acelz) + '/' + String(Status) + '/' + String(tempC) + ']' ; 
       Serial.print(msj); 
       
     }
