@@ -1,6 +1,5 @@
 from serial import*
 from time import *
-import thread
 
 def mostrar_sensores():
      #sleep(delay)
@@ -39,15 +38,15 @@ while 1:
 while 1:     
      a = raw_input("Que desea hacer? ")
      if a == "W":
-          ser.write("Fd.")
+          ser.write('Fd.')
      elif a == "X":
-          ser.write("Bd.")
+          ser.write('Bd.')
      elif a == "A":
-          ser.write("Lf.")
+          ser.write('Lf.')
      elif a == "D":
-          ser.write("Rt.")
+          ser.write('Rt.')
      elif a== "S":
-          ser.write("St.")     
+          ser.write('St.')     
      else:
           print("escriba un comando de la lista")
           continue
