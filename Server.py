@@ -1,9 +1,10 @@
 import socket
 from serial import *
+import sys
 
 host = ''
-port = 8888
-ser = Serial('/dev/ttyACM0', 115200)
+port = 10003
+ser = Serial('/dev/ttyACM1', 115200)
 storedValue = 'what up'
 
 def setupServer():
@@ -42,7 +43,12 @@ def dataTransfer(conn):
         data = conn.recv(1024)
         data = data.decode('utf-8')
         print(data)
-        if data == 'Fd.':
+        if data == '':
+            print 'Cerrando servidor'
+            conn.close()
+            s.close()
+            break
+        elif data == 'Fd.':
             ser.write('Fd.')
         elif data == 'Lf.':
             ser.write('Lf.')
@@ -54,10 +60,13 @@ def dataTransfer(conn):
             ser.write('Bd.')
         elif data == 'Se.':
             datos = readSerial()
-            conn.sendall(str.encode(datos))            
+            conn.sendall(str.encode(datos))
+        elif data == 'CLOSE':
+            print 'Cliente desconectado'
+            conn.close()
+            s.close()
         #separamos los datos, para separar el comando del resto de los datos
         print("Data has been sent!")
-    conn.close()
 
 s = setupServer()
 
@@ -66,5 +75,8 @@ while True:
         conn = setupConnection(s)
         dataTransfer(conn)
     except:
+        conn.close()
+        s.close()
+        sys.exit()
         break
 
