@@ -1,15 +1,14 @@
 import socket
 from Tkinter import*
 from time import*
-import funciones as fun
 
 tinicial= int(time())
 
 host = '172.29.1.1'
 port = 10003
 
-#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#s.connect((host, port))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((host, port))
 
 
 def divide(x):
@@ -103,17 +102,17 @@ Bd.pack()
 marco4 = Frame(vent)
 marco4.pack()
 
-si = Button(marco4, text="Prender",command=prender1)
+si = Button(marco4, width=10, text="Prender",command=prender1)
 si.pack(side=LEFT)
 
-no = Button(marco4, text="Apagar",command=apagar1)
+no = Button(marco4, width=10, text="Apagar",command=apagar1)
 no.pack(side=LEFT)
 
 acelerometro = Label(marco4, text="Acelerometro =" )
 acelerometro.pack(side=LEFT)
 
-acce = Label(marco4, text="      ")
-acce.pack(side=LEFT)
+accel = Label(marco4, text="      ")
+accel.pack(side=LEFT)
 
 temperatura = Label(marco4, text="Temperatura =" )
 temperatura.pack(side=LEFT)
@@ -130,13 +129,13 @@ rolex.pack(side=LEFT)
 admin = Frame(vent)
 admin.pack()
 
-close = Button(admin, width=20, text="CLOSE", command=cl)
+close = Button(admin, width=10, text="CLOSE", command=cl)
 close.pack(side=LEFT)
 
-kill = Button(admin, width=20, text="KILL", command=kl)
+kill = Button(admin, width=10, text="KILL", command=kl)
 kill.pack(side=LEFT)
 
-shut_down = Button(admin, width=20, text="SHUT DOWN", command=sd)
+shut_down = Button(admin, width=10, text="SHUT DOWN", command=sd)
 shut_down.pack()
 
 def add_time():
@@ -149,15 +148,34 @@ def add_time():
 def sensor():
   s.send(str.encode("Se."))
   men = s.recv(1024)
+  
+  texto = open("datos.txt")
+  texto.write(men + "\n")
+  texto.close()
+
   data = divide(men)
+  
   acce = element2(data,0)
   acce = element1(acce)
-  print acce
+  accel.config(text=str(acce))
+  
   estado = element2(data,1)
-  print estado
+  
   temp = element2(data,2)
   temp = element3(temp)
-  print temp
+  temp = int(temp)*0.48828125*10//10
+  temper.config(text=str(temp)+'C')
+  
+  if estado ==  '8':
+    print "Avanzando"
+  if estado ==  '5':
+    print "Detenido"
+  if estado ==  '4':
+    print "Izquierda"
+  if estado ==  '6':
+    print "Derecha"
+  if estado ==  '2':
+    print "Retrocediendo"
   
   vent.after(3000, sensor)
 
