@@ -4,7 +4,7 @@ from time import*
 
 tinicial= int(time())
 
-host = '172.29.1.1'
+host = '172.30.1.1'
 port = 10003
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -12,67 +12,82 @@ s.connect((host, port))
 
 
 def divide(x):
-  r = x.split('/')
-  return r
+    r = x.split('/')
+    return r
+
 
 def element1(x):
-  r = x[1:len(x)]
-  return r
+    r = x[1:len(x)]
+    return r
+
 
 def element2(x,c):
-  r = x[c]
-  return r
+    r = x[c]
+    return r
+
 
 def element3(x):
-  r = x[0:len(x)-1]
-  return r
+    r = x[0:len(x)-1]
+    return r
 
+
+def xyz(sting):
+    r = sting.split(';')
+    r1 = r[0] + 'X'
+    r2 = r[1] + 'Y'
+    r3 = r[2] + 'Z'
+    r = r1 + '-' + r2 + '-' + r3
+    return r
 
 def fd():
-  s.send(str.encode("Fd."))
-  
+    s.send(str.encode("Fd."))
+    return
+
+
 def left():
-  s.send(str.encode("Lf."))
-  return
+    s.send(str.encode("Lf."))
+    return
   
+
 def staph():
-  s.send(str.encode("St."))
-  return
+    s.send(str.encode("St."))
+    return
   
+
 def right():
-  s.send(str.encode("Rt."))
-  return
+    s.send(str.encode("Rt."))
+    return
   
+
 def bd():
-  s.send(str.encode("Bd."))
-  return
+    s.send(str.encode("Bd."))
+    vent.destroy()
+    return
+
 
 def cl():
-  s.send(str.encode("CLOSE"))
-  return
+    s.send(str.encode("CLOSE"))
+    vent.destroy()
+    return
+
 
 def kl():
-  s.send(str.encode("KILL"))
-  return
+    s.send(str.encode("KILL"))
+    vent.destroy()
+    return
 
-  
-def prender1():
-     global pto
-     pto = 1
-     return
-     
-def apagar1():
-     global pto
-     pto = 0
-     return
+
+nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos")
+
+
+texto = open(nombre, 'w')
 
 vent = Tk()
 
-def sd():
-  vent.kill
 
-global pto 
-pto = 0
+def sd():
+    vent.destroy()
+
 
 marco1 = Frame(vent)
 marco1.pack()
@@ -102,11 +117,6 @@ Bd.pack()
 marco4 = Frame(vent)
 marco4.pack()
 
-si = Button(marco4, width=10, text="Prender",command=prender1)
-si.pack(side=LEFT)
-
-no = Button(marco4, width=10, text="Apagar",command=apagar1)
-no.pack(side=LEFT)
 
 acelerometro = Label(marco4, text="Acelerometro =" )
 acelerometro.pack(side=LEFT)
@@ -138,6 +148,7 @@ kill.pack(side=LEFT)
 shut_down = Button(admin, width=10, text="SHUT DOWN", command=sd)
 shut_down.pack()
 
+
 def add_time():
   tiempo = str( int(time()) - tinicial -1)
   rand = tiempo
@@ -148,15 +159,15 @@ def add_time():
 def sensor():
   s.send(str.encode("Se."))
   men = s.recv(1024)
-  
-  texto = open("datos.txt")
-  texto.write(men + "\n")
-  texto.close()
+
+  texto.write(men + '\n')
 
   data = divide(men)
   
-  acce = element2(data,0)
+  acce = element2(data, 0)
   acce = element1(acce)
+  acce = xyz(acce)
+
   accel.config(text=str(acce))
   
   estado = element2(data,1)
@@ -166,15 +177,15 @@ def sensor():
   temp = int(temp)*0.48828125*10//10
   temper.config(text=str(temp)+'C')
   
-  if estado ==  '8':
+  if estado == '8':
     print "Avanzando"
-  if estado ==  '5':
+  if estado == '5':
     print "Detenido"
-  if estado ==  '4':
+  if estado == '4':
     print "Izquierda"
-  if estado ==  '6':
+  if estado == '6':
     print "Derecha"
-  if estado ==  '2':
+  if estado == '2':
     print "Retrocediendo"
   
   vent.after(3000, sensor)
@@ -186,3 +197,5 @@ vent.mainloop()
 print("se ha cerrado la ventana")
 
 s.close()
+
+texto.close()
