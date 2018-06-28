@@ -4,7 +4,7 @@ import sys
 
 host = ''
 port = 10003
-ser = Serial('/dev/ttyACM1', 115200)
+ser = Serial('/dev/ttyACM0', 115200)
 storedValue = 'what up'
 
 def setupServer():
