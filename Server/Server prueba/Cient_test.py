@@ -2,13 +2,23 @@ import socket
 from Tkinter import*
 from time import*
 
-tinicial= int(time())
+# Declaracion de todas las variables usadas mas adelante en el programa
 
+# Momento en que empieza a correr el programa para saber cuanto tiempo lleva corriendo
+tinicial = int(time())
+
+# direccion IP del host del server y el numero de puerto usado
 host = '172.30.1.1'
 port = 10003
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
+
+# ## -------------------------------------------------------------------------------------------------------------- ## #
+
+# Funciones de procesamiento de datos
+
+# Divide el arreglo de datos por /, para separar aceleracion estado y temperatura
 
 
 def divide(x):
@@ -16,20 +26,28 @@ def divide(x):
     return r
 
 
+# Devuelve el arreglo sacandole el primer elemento
+
 def element1(x):
     r = x[1:len(x)]
     return r
 
+
+# Entrega el elemento c, en este caso lo utilizamos para sacar el primer elemento
 
 def element2(x,c):
     r = x[c]
     return r
 
 
+# Devuelve el arregl, pero sin el primer elemento
+
 def element3(x):
     r = x[0:len(x)-1]
     return r
 
+
+# Agrega los ejes X Y y Z al string que contiene las aceleraciones
 
 def xyz(sting):
     r = sting.split(';')
@@ -38,6 +56,11 @@ def xyz(sting):
     r3 = r[2] + 'Z'
     r = r1 + '-' + r2 + '-' + r3
     return r
+
+
+# ###-------------------------------------------------------------------------------------------------------### #
+
+# Funciones para avanzar, doblar a la izquierda, detenerse, doblar a la derecha e ir en reversa.
 
 def fd():
     s.send(str.encode("Fd."))
@@ -65,6 +88,8 @@ def bd():
     return
 
 
+# Funciones extra para cerrar el programa y cerrar el servidor y el programa
+
 def cl():
     s.send(str.encode("CLOSE"))
     vent.destroy()
@@ -77,16 +102,22 @@ def kl():
     return
 
 
+# Abrimos este archivo de texto para guardar todos los
+
 nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos")
 
 
 texto = open(nombre, 'w')
 
-vent = Tk()
-
 
 def sd():
     vent.destroy()
+    return
+
+
+# ###--------------------------------------------------------------------------------------------------------------### #
+
+vent = Tk()
 
 
 marco1 = Frame(vent)
@@ -170,9 +201,9 @@ def sensor():
 
   accel.config(text=str(acce))
   
-  estado = element2(data,1)
+  estado = element2(data, 1)
   
-  temp = element2(data,2)
+  temp = element2(data, 2)
   temp = element3(temp)
   temp = int(temp)*0.48828125*10//10
   temper.config(text=str(temp)+'C')
