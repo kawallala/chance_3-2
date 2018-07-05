@@ -4,11 +4,15 @@ from time import*
 
 # Declaracion de todas las variables usadas mas adelante en el programa
 
+
 # Momento en que empieza a correr el programa para saber cuanto tiempo lleva corriendo
 tinicial = int(time())
 
+# Network de ZeroTier
+ZeroTier = '88503383909a8fc4'
+
 # direccion IP del host del server y el numero de puerto usado
-host = '172.30.1.1'
+host = '192.168.43.46'
 port = 10003
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,6 +23,11 @@ s.connect((host, port))
 # Funciones de procesamiento de datos
 
 # Divide el arreglo de datos por /, para separar aceleracion estado y temperatura
+
+
+def agregar(x):
+    m = x[0:len(x)-1] + '/' + str(time()) + "]"
+    return m
 
 
 def divide(x):
@@ -64,41 +73,34 @@ def xyz(sting):
 
 def fd():
     s.send(str.encode("Fd."))
-    return
+    return sensor2()
 
 
 def left():
     s.send(str.encode("Lf."))
-    return
+    return sensor2()
   
 
 def staph():
     s.send(str.encode("St."))
-    return
+    return sensor2()
   
 
 def right():
     s.send(str.encode("Rt."))
-    return
+    return sensor2()
   
 
 def bd():
     s.send(str.encode("Bd."))
-    vent.destroy()
-    return
+    return sensor2()
 
 
-# Funciones extra para cerrar el programa y cerrar el servidor y el programa
+# ###--------------------------------------------------------------------------------------------------------------### #
+# Esta funcion lo que hace es cerrar completamente el servidor para que no se puedan reconectar los clientes
 
 def cl():
     s.send(str.encode("CLOSE"))
-    vent.destroy()
-    return
-
-
-def kl():
-    s.send(str.encode("KILL"))
-    vent.destroy()
     return
 
 
@@ -110,12 +112,10 @@ nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos")
 texto = open(nombre, 'w')
 
 
-def sd():
-    vent.destroy()
-    return
-
-
 # ###--------------------------------------------------------------------------------------------------------------### #
+
+# Esta seccion es toda la programacion referente a la ventana de python
+
 
 vent = Tk()
 
@@ -173,12 +173,6 @@ admin.pack()
 close = Button(admin, width=10, text="CLOSE", command=cl)
 close.pack(side=LEFT)
 
-kill = Button(admin, width=10, text="KILL", command=kl)
-kill.pack(side=LEFT)
-
-shut_down = Button(admin, width=10, text="SHUT DOWN", command=sd)
-shut_down.pack()
-
 
 def add_time():
   tiempo = str( int(time()) - tinicial -1)
@@ -187,39 +181,72 @@ def add_time():
   vent.after(500, add_time)
 
 
+def sensor2():
+    s.send(str.encode("Se."))
+    men = s.recv(1024)
+
+    texto.write(agregar(men) + '\n')
+
+    data = divide(men)
+
+    acce = element2(data, 0)
+    acce = element1(acce)
+    acce = xyz(acce)
+
+    accel.config(text=str(acce))
+
+    estado = element2(data, 1)
+
+    temp = element2(data, 2)
+    temp = element3(temp)
+    temp = int(temp) * 0.48828125 * 10 // 10
+    temper.config(text=str(temp) + 'C')
+
+    if estado == '8':
+        print "Avanzando"
+    if estado == '5':
+        print "Detenido"
+    if estado == '4':
+        print "Izquierda"
+    if estado == '6':
+        print "Derecha"
+    if estado == '2':
+        print "Retrocediendo"
+
+
 def sensor():
-  s.send(str.encode("Se."))
-  men = s.recv(1024)
+    s.send(str.encode("Se."))
+    men = s.recv(1024)
 
-  texto.write(men + '\n')
+    texto.write(agregar(men) + '\n')
 
-  data = divide(men)
+    data = divide(men)
   
-  acce = element2(data, 0)
-  acce = element1(acce)
-  acce = xyz(acce)
+    acce = element2(data, 0)
+    acce = element1(acce)
+    acce = xyz(acce)
 
-  accel.config(text=str(acce))
+    accel.config(text=str(acce))
   
-  estado = element2(data, 1)
+    estado = element2(data, 1)
   
-  temp = element2(data, 2)
-  temp = element3(temp)
-  temp = int(temp)*0.48828125*10//10
-  temper.config(text=str(temp)+'C')
+    temp = element2(data, 2)
+    temp = element3(temp)
+    temp = int(temp)*0.48828125*10//10
+    temper.config(text=str(temp)+'C')
   
-  if estado == '8':
-    print "Avanzando"
-  if estado == '5':
-    print "Detenido"
-  if estado == '4':
-    print "Izquierda"
-  if estado == '6':
-    print "Derecha"
-  if estado == '2':
-    print "Retrocediendo"
+    if estado == '8':
+        print "Avanzando"
+    if estado == '5':
+        print "Detenido"
+    if estado == '4':
+        print "Izquierda"
+    if estado == '6':
+        print "Derecha"
+    if estado == '2':
+        print "Retrocediendo"
   
-  vent.after(3000, sensor)
+    vent.after(3000, sensor)
 
   
 vent.after(0, add_time)  
