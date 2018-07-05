@@ -55,6 +55,12 @@ def readSerial():
 
 
 def dataTransfer(conn):
+    '''
+    dataTransfer(conn): conn -> None
+
+    Metodo que recibe la conexion realizada anterormente e inicializa la comunicacion con la misma, esperando a recibir un mensaje, se escribe
+    en el serial el codigo correspondiente para la acción requerida
+    '''
     #lo que hay aqui recibe y envia datos
     while True:
         #recibo datos
@@ -87,17 +93,22 @@ def dataTransfer(conn):
         print("Data has been sent!")
 
 def setupAll():
+    '''
+    Metodo para iniciar el servidor, las conexiones, y el intercambio de mensajes con el cliente
+    '''
     s = setupServer()
     conn = setupConnection(s)
     dataTransfer(conn)
 
 def go():
+    '''
+    Loop principal, donde se realizan todas las acciones
+    '''
     while True:
         try:
             setupAll()
         except:
             break
     
-
 go()
 
