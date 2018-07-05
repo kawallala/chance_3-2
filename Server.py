@@ -1,13 +1,19 @@
+#importamos librerias necesarias
 import socket
 from serial import *
-import sys
 
+#variables necesarias para la iniciacion
 host = ''
 port = 10003
 ser = Serial('/dev/ttyACM0', 115200)
-storedValue = 'what up'
 
 def setupServer():
+    '''
+    setupServe(): None -> socket
+
+    Metodo para iniciar el servidor y unirlo al socket, creando mensajes para mostrar
+    el estado de la creacion
+    '''
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print("socket created")
     try:
@@ -18,22 +24,34 @@ def setupServer():
     return s
 
 def setupConnection(s):
-    s.listen(2) #una sola persona en cualquier momento
+    '''
+    stupConnection(): None -> conn
+
+    Metodo para aceptar una conexion de un cliente, devuelve la direccion de la
+    conexion
+    '''
+    s.listen(1) #una sola persona en cualquier momento
     conn, address = s.accept()
     print("Conectado a: " + address[0] + ":" + str(address[1]))
     return conn
 
 def readSerial():
-     ser.write("Se.")
-     accion = ser.read()
-     b = "["
-     if accion == "[":
-          while accion != "]":
-               accion= ser.read()
-               b = b + accion
-          ser.flush()
-     print (b)
-     return b
+    '''
+    readSerial(): None -> str
+
+    Metodo que envia el mensaje predeterminado al Arduino para recolectar el
+    estado de los sensores, devuelve el valor como un str
+    '''
+    ser.write("Se.")
+    accion = ser.read()
+    b = "["
+    if accion == "[":
+        while accion != "]":
+            accion= ser.read()
+            b = b + accion
+        ser.flush()
+    print b
+    return b
 
 
 def dataTransfer(conn):
@@ -42,9 +60,9 @@ def dataTransfer(conn):
         #recibo datos
         data = conn.recv(1024)
         data = data.decode('utf-8')
-        print(data)
+        print data
         if data == '':
-            print 'Cerrando servidor'
+            print 'Cliente perdido, Cerrando servidor'
             conn.close()
             s.close()
             break
@@ -62,21 +80,24 @@ def dataTransfer(conn):
             datos = readSerial()
             conn.sendall(str.encode(datos))
         elif data == 'CLOSE':
-            print 'Cliente desconectado'
+            print 'Cliente desconectado, Cerrando servidor'
             conn.close()
             s.close()
-        #separamos los datos, para separar el comando del resto de los datos
+            break
         print("Data has been sent!")
 
-s = setupServer()
+def setupAll():
+    s = setupServer()
+    conn = setupConnection(s)
+    dataTransfer(conn)
 
-while True:
-    try:
-        conn = setupConnection(s)
-        dataTransfer(conn)
-    except:
-        conn.close()
-        s.close()
-        sys.exit()
-        break
+def go():
+    while True:
+        try:
+            setupAll()
+        except:
+            break
+    
+
+go()
 
