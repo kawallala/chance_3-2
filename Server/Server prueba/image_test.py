@@ -137,6 +137,9 @@ Flf = ImageTk.PhotoImage(imgr)
 imgt = Image.open("Frt.png")
 Frt = ImageTk.PhotoImage(imgt)
 
+imgt = Image.open("Fst.png")
+Fst = ImageTk.PhotoImage(imgt)
+
 
 # ###--------------------------------------------------------------------------------------------------------------### #
 
@@ -153,7 +156,7 @@ marco2.pack()
 left = tk.Button(marco2, width=100, image=Flf, command=left)
 left.pack(side=tk.LEFT)
 
-stop = tk.Button(marco2, width=100, image=Frt, command=staph)
+stop = tk.Button(marco2, width=100, image=Fst, command=staph)
 stop.pack(side=tk.LEFT)
 
 right = tk.Button(marco2, width=100, image=Frt, command=right)
