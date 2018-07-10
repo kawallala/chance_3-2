@@ -19,7 +19,7 @@ Control de motores de CC con CI L298
 #define MOTOR_DIR_RIGHT  0   // Adelante
 #define MOTOR_DIR_LEFT  1  // Atras
 
-int v=255; //velocidad
+int v=150; //velocidad
 
 String inputString = "";       
 boolean stringComplete = false;
@@ -165,6 +165,15 @@ void loop(){
       motorStop();  
       //Serial.println("St");
       Status = 5;
+    }
+    else if(c=="HIGH"){
+      setSpeed(250);
+    }
+    else if(c=="MEDIUM"){
+      setSpeed(180);
+    }
+    else if(c=="LOW"){
+      setSpeed(150);
     }
     else if(c == "Se"){      
       //Acelerometro      

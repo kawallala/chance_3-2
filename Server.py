@@ -68,6 +68,7 @@ def dataTransfer(conn):
         data = data.decode('utf-8')
         print data
         if data == '':
+            ser.write('St.')
             print 'Cliente perdido, Cerrando servidor'
             conn.close()
             s.close()
@@ -85,7 +86,14 @@ def dataTransfer(conn):
         elif data == 'Se.':
             datos = readSerial()
             conn.sendall(str.encode(datos))
+        elif data == '150':
+            ser.write('LOW.')
+        elif data == '180':
+            ser.write('MEDIUM.')
+        elif data == '250':
+            ser.write('HIGH.')
         elif data == 'CLOSE':
+            ser.write('St.')
             print 'Cliente desconectado, Cerrando servidor'
             conn.close()
             s.close()
