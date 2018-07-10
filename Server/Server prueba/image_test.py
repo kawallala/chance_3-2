@@ -1,6 +1,7 @@
 import socket
-from Tkinter import*
-from time import*
+import Tkinter as tk
+from time import *
+from PIL import Image, ImageTk
 
 # Declaracion de todas las variables usadas mas adelante en el programa
 
@@ -15,8 +16,9 @@ ZeroTier = '88503383909a8fc4'
 host = '192.168.43.46'
 port = 10003
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
+#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#s.connect((host, port))
+
 
 # ## -------------------------------------------------------------------------------------------------------------- ## #
 
@@ -26,7 +28,7 @@ s.connect((host, port))
 
 
 def agregar(x):
-    m = x[0:len(x)-1] + '/' + str(time()) + "]"
+    m = x[0:len(x) - 1] + '/' + str(time()) + "]"
     return m
 
 
@@ -44,7 +46,7 @@ def element1(x):
 
 # Entrega el elemento c, en este caso lo utilizamos para sacar el primer elemento
 
-def element2(x,c):
+def element2(x, c):
     r = x[c]
     return r
 
@@ -52,7 +54,7 @@ def element2(x,c):
 # Devuelve el arregl, pero sin el primer elemento
 
 def element3(x):
-    r = x[0:len(x)-1]
+    r = x[0:len(x) - 1]
     return r
 
 
@@ -79,17 +81,17 @@ def fd():
 def left():
     s.send(str.encode("Lf."))
     return sensor2()
-  
+
 
 def staph():
     s.send(str.encode("St."))
     return sensor2()
-  
+
 
 def right():
     s.send(str.encode("Rt."))
     return sensor2()
-  
+
 
 def bd():
     s.send(str.encode("Bd."))
@@ -101,6 +103,7 @@ def bd():
 
 def cl():
     s.send(str.encode("CLOSE"))
+    vent.destroy()
     return
 
 
@@ -108,77 +111,96 @@ def cl():
 
 nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos")
 
-
 texto = open(nombre, 'w')
 
-
 # ###--------------------------------------------------------------------------------------------------------------### #
+
 
 # Esta seccion es toda la programacion referente a la ventana de python
 
 
-vent = Tk()
+vent = tk.Tk()
 
 
-marco1 = Frame(vent)
+# ###--------------------------------------------------------------------------------------------------------------### #
+
+
+img = Image.open("Fup.png")
+Fup = ImageTk.PhotoImage(img)
+
+imge = Image.open("Fdw.png")
+Fdw = ImageTk.PhotoImage(imge)
+
+imgr = Image.open("Flf.png")
+Flf = ImageTk.PhotoImage(imgr)
+
+imgt = Image.open("Frt.png")
+Frt = ImageTk.PhotoImage(imgt)
+
+imgt = Image.open("Fst.png")
+Fst = ImageTk.PhotoImage(imgt)
+
+
+# ###--------------------------------------------------------------------------------------------------------------### #
+
+
+marco1 = tk.Frame(vent)
 marco1.pack()
 
-fd = Button(marco1, width=20,text="Adelante",command=fd)
+fd = tk.Button(marco1, width=100, image=Fup, command=fd)
 fd.pack()
 
-
-marco2 = Frame(vent)
+marco2 = tk.Frame(vent)
 marco2.pack()
 
-left = Button(marco2, width=20,text="Izquierda",command=left)
-left.pack(side=LEFT)
+left = tk.Button(marco2, width=100, image=Flf, command=left)
+left.pack(side=tk.LEFT)
 
-stop = Button(marco2, width=20,text="Detenerse",command=staph)
-stop.pack(side=LEFT)
+stop = tk.Button(marco2, width=100, image=Fst, command=staph)
+stop.pack(side=tk.LEFT)
 
-right = Button(marco2, width=20,text="Derecha",command=right)
-right.pack(side=LEFT)
+right = tk.Button(marco2, width=100, image=Frt, command=right)
+right.pack(side=tk.LEFT)
 
-marco3 = Frame(vent)
+marco3 = tk.Frame(vent)
 marco3.pack()
 
-Bd = Button(marco3, width=20,text="Atras",command=bd)
+Bd = tk.Button(marco3, width=100, image=Fdw, command=bd)
 Bd.pack()
 
-marco4 = Frame(vent)
+marco4 = tk.Frame(vent)
 marco4.pack()
 
+acelerometro = tk.Label(marco4, text="Acelerometro =")
+acelerometro.pack(side=tk.LEFT)
 
-acelerometro = Label(marco4, text="Acelerometro =" )
-acelerometro.pack(side=LEFT)
+accel = tk.Label(marco4, text="      ")
+accel.pack(side=tk.LEFT)
 
-accel = Label(marco4, text="      ")
-accel.pack(side=LEFT)
+temperatura = tk.Label(marco4, text="Temperatura =")
+temperatura.pack(side=tk.LEFT)
 
-temperatura = Label(marco4, text="Temperatura =" )
-temperatura.pack(side=LEFT)
+temper = tk.Label(marco4, text="      ")
+temper.pack(side=tk.LEFT)
 
-temper = Label(marco4,text="      ")
-temper.pack(side=LEFT)
+hora = tk.Label(marco4, text="Tiempo =")
+hora.pack(side=tk.LEFT)
 
-hora = Label(marco4, text="Tiempo =" )
-hora.pack(side=LEFT)
+rolex = tk.Label(marco4, text="")
+rolex.pack(side=tk.LEFT)
 
-rolex = Label(marco4, text="")
-rolex.pack(side=LEFT)
-
-admin = Frame(vent)
+admin = tk.Frame(vent)
 admin.pack()
 
-close = Button(admin, width=10, text="CLOSE", command=cl)
-close.pack(side=LEFT)
+close = tk.Button(admin, width=10, text="CLOSE", command=cl)
+close.pack(side=tk.LEFT)
 
 
 def add_time():
-  tiempo = str( int(time()) - tinicial -1)
-  rand = tiempo
-  rolex.config(text=rand)
-  vent.after(500, add_time)
+    tiempo = str(int(time()) - tinicial - 1)
+    rand = tiempo
+    rolex.config(text=rand)
+    vent.after(500, add_time)
 
 
 def sensor2():
@@ -221,20 +243,20 @@ def sensor():
     texto.write(agregar(men) + '\n')
 
     data = divide(men)
-  
+
     acce = element2(data, 0)
     acce = element1(acce)
     acce = xyz(acce)
 
     accel.config(text=str(acce))
-  
+
     estado = element2(data, 1)
-  
+
     temp = element2(data, 2)
     temp = element3(temp)
-    temp = int(temp)*0.48828125*10//10
-    temper.config(text=str(temp)+'C')
-  
+    temp = int(temp) * 0.48828125 * 10 // 10
+    temper.config(text=str(temp) + 'C')
+
     if estado == '8':
         print "Avanzando"
     if estado == '5':
@@ -245,11 +267,11 @@ def sensor():
         print "Derecha"
     if estado == '2':
         print "Retrocediendo"
-  
+
     vent.after(3000, sensor)
 
-  
-vent.after(0, add_time)  
+
+vent.after(0, add_time)
 vent.after(1000, sensor)
 vent.mainloop()
 print("se ha cerrado la ventana")
