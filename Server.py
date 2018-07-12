@@ -66,6 +66,7 @@ def dataTransfer(conn):
         #recibo datos
         data = conn.recv(1024)
         data = data.decode('utf-8')
+        data= data[:4]
         print data
         if data == '':
             ser.write('St.')
@@ -73,31 +74,30 @@ def dataTransfer(conn):
             conn.close()
             s.close()
             break
-        elif data == 'Fd.':
+        elif data == 'Fwd.':
             ser.write('Fd.')
-        elif data == 'Lf.':
-            ser.write('Lf.')
-        elif data == 'Rt.':
+        elif data == 'Lef.':
+            ser.write('Lef.')
+        elif data == 'Rit.':
             ser.write('Rt.')
-        elif data == 'St.':
+        elif data == 'Sto.':
             ser.write('St.')
-        elif data == 'Bd.':
+        elif data == 'Bwd.':
             ser.write('Bd.')
-        elif data == 'Se.':
+        elif data == 'Ser.':
             datos = readSerial()
             conn.sendall(str.encode(datos))
-        elif data == '150':
-            ser.write('LOW.')
-        elif data == '180':
-            ser.write('MEDIUM.')
-        elif data == '250':
-            ser.write('HIGH.')
+        elif data[0]=='v':
+            ser.write(data)
         elif data == 'CLOSE':
             ser.write('St.')
             print 'Cliente desconectado, Cerrando servidor'
             conn.close()
             s.close()
             break
+        else:
+            ser.write('St.')
+            print 'Comando no reconocido'
         print("Data has been sent!")
 
 def setupAll():
