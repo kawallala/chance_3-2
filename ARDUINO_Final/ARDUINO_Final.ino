@@ -24,6 +24,7 @@ int v=150; //velocidad
 String inputString = "";       
 boolean stringComplete = false;
 String c;
+String d;
 String msj; //mensaje pi
 int Status = 5; //Estado de motores
 
@@ -41,7 +42,8 @@ void setup(){
    pinMode(MOTOR_CTR2,OUTPUT);
    pinMode(MOTOR_PWM1,OUTPUT);
    Serial.begin(115200);   
-   inputString.reserve(200);   
+   inputString.reserve(200);
+   setSpeed(v);   
 }
 
 // Control de velocidad mediante PWM
@@ -128,54 +130,47 @@ void motorFree()
 }
 
 void loop(){ 
-  
-  setSpeed(v);
-  
   if (stringComplete){    
-    c = inputString.substring(0,2);    
-    if (c=="Fd"){
+    c = inputString.substring(0,3);  
+    d = inputString.substring(0,1);  
+    if (c=="Fwd"){
       motorFree();
       delay(100);
       motorMove(MOTOR_DIR_FORWARD);
       //Serial.println("Fd");
       Status = 8;
     }
-    else if (c=="Bd"){
+    else if (c=="Bwd"){
       motorFree();
       delay(100);
       motorMove(MOTOR_DIR_BACKWARD);
       //Serial.println("Bd");
       Status = 2;
     }
-    else if(c=="Lf"){
+    else if(c=="Lef"){
       motorFree();
       delay(100);
       turnAngle(MOTOR_DIR_LEFT);
       //Serial.println("Lf");
       Status = 4;
     }
-    else if(c=="Rt"){
+    else if(c=="Rit"){
       motorFree();
       delay(100);
       turnAngle(MOTOR_DIR_RIGHT);
       //Serial.println("Rt");
       Status = 6;
     }
-    else if(c=="St"){
+    else if(c=="Sto"){
       motorStop();  
       //Serial.println("St");
       Status = 5;
     }
-    else if(c=="HIGH"){
-      setSpeed(250);
+    else if(d=="v"){
+      setSpeed(c.substring(1,3).toInt()*10);      
     }
-    else if(c=="MEDIUM"){
-      setSpeed(180);
-    }
-    else if(c=="LOW"){
-      setSpeed(150);
-    }
-    else if(c == "Se"){      
+    
+    else if(c == "Ser"){      
       //Acelerometro      
       acelx = analogRead(0);
       acelx = analogRead(0);      
@@ -201,7 +196,8 @@ void serialEvent() {
     char inChar = (char)Serial.read();
     inputString += inChar;    
     if (inChar == '.'){      
-      stringComplete = true;      
+      stringComplete = true;
+            
     }
   }
 }

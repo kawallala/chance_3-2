@@ -88,15 +88,16 @@ def dataTransfer(conn):
             datos = readSerial()
             conn.sendall(str.encode(datos))
         elif data[0]=='v':
+            print 'Cambiando la velocidad'
             ser.write(data)
         elif data == 'CLOSE':
-            ser.write('St.')
+            ser.write('Sto.')
             print 'Cliente desconectado, Cerrando servidor'
             conn.close()
             s.close()
             break
         else:
-            ser.write('St.')
+            ser.write('Sto.')
             print 'Comando no reconocido'
         print("Data has been sent!")
 
