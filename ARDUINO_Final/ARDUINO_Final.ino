@@ -183,7 +183,12 @@ void loop(){
       tempC = analogRead(3);      
       msj = '[' + String(acelx) + ';' + String(acely) + ';' + String(acelz) + '/' + String(Status) + '/' + String(tempC) + ']' ; 
       Serial.print(msj);      
-    }    
+    }
+    else {
+      inputString = "";
+      c = "";
+      stringComplete = false;       
+    }
     inputString = "";
     c = "";
     stringComplete = false;
