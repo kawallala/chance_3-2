@@ -16,8 +16,8 @@ ZeroTier = '88503383909a8fc4'
 host = '192.168.43.46'
 port = 10004
 
-#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#s.connect((host, port))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((host, port))
 
 
 # ## -------------------------------------------------------------------------------------------------------------- ## #
@@ -118,6 +118,10 @@ def slow():
     return
 
 
+def speed(event):
+    print fast.get()
+    return
+
 # ###--------------------------------------------------------------------------------------------------------------### #
 # Esta funcion lo que hace es cerrar completamente el servidor para que no se puedan reconectar los clientes
 
@@ -185,14 +189,9 @@ marco12.pack()
 marco13 = Tk.Frame(marco1)
 marco13.pack()
 
-fast1 = Tk.Button(marco11, width=10, text="Rapido", command=fast)
-fast1.pack(side=Tk.LEFT)
-
-fast2 = Tk.Button(marco12, width=10, text="Normal", command=mids)
-fast2.pack(side=Tk.LEFT)
-
-fast3 = Tk.Button(marco13, width=10, text="Lento", command=slow)
-fast3.pack(side=Tk.LEFT)
+fast = Tk.Scale(marco11, from_=12, to=24, command=speed)
+fast.set(100)
+fast.pack(side=Tk.LEFT)
 
 marco2 = Tk.Frame(vent)
 marco2.pack()
