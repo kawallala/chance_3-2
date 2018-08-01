@@ -5,9 +5,9 @@ from serial import *
 
 # variables necesarias para la iniciacion
 host = ''
-port = 10004
+port = 10005
 ser = Serial('/dev/ttyACM0', 115200)
-
+dict = { 8 : 'Fwd.' , 5 : 'Sto.',  2: 'Bwd.' , 4:'Let.' , 6:'Rit.'} 
 
 def setup_server():
     """
@@ -30,6 +30,8 @@ def setup_server():
 def setup_connection(s):
     """
     stupConnection(): None -> conn
+
+    
 
     Metodo para aceptar una conexion de un cliente, devuelve la direccion de la
     conexion
@@ -58,7 +60,15 @@ def read_serial():
     print b
     return b
 
+def dataCompare(data1,data2):
+    for i in range(len(data1)):
+        if data1[i] != data2[i]:
+            if i == 0:
+                ser.write(dict[data1])
+                
 
+
+    
 def data_transfer(conn):
     """
     dataTransfer(conn): conn -> None
@@ -69,40 +79,22 @@ def data_transfer(conn):
     # lo que hay aqui recibe y envia datos
     while True:
         # recibo datos
+        data_old = ['5',"90","12"]
         data = conn.recv(1024)
         data = data.decode('utf-8')
-        data = data[:4]
+        data = data.split('/')
         print data
         if data == '':
             ser.write('Sto.')
             print 'Cliente perdido, Cerrando servidor'
             conn.close()
             s.close()
-            break
-        elif data == 'Fwd.':
-            ser.write('Fwd.')
-        elif data == 'Lef.':
-            ser.write('Lef.')
-        elif data == 'Rit.':
-            ser.write('Rit.')
-        elif data == 'Sto.':
-            ser.write('Sto.')
-        elif data == 'Bwd.':
-            ser.write('Bwd.')
-        elif data == 'Ser.':
-            datos = read_serial()
-            conn.sendall(str.encode(datos))
-        elif data[0]=='v' and len(data) == 4:
-            print 'Cambiando la velocidad'
-            ser.write(data)
-        elif data == 'CLOSE':
-            ser.write('Sto.')
-            print 'Cliente desconectado, Cerrando servidor'
-            conn.close()
-            s.close()
-            break
+            break 
         else:
-            print 'Comando no reconocido'
+            if data != data_old:
+                dataCompare(data,data_old)
+                read_serial()
+                data_old = data
         print "Data has been sent!"
 
 
