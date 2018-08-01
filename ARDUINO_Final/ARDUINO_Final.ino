@@ -132,7 +132,8 @@ void motorFree()
 void loop(){ 
   if (stringComplete){    
     c = inputString.substring(0,3);  
-    d = inputString.substring(0,1);  
+    d = inputString.substring(0,1);
+    
     if (c=="Fwd"){
       motorFree();
       delay(100);
