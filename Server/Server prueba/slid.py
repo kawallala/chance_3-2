@@ -16,8 +16,8 @@ ZeroTier = '88503383909a8fc4'
 host = '192.168.43.46'
 port = 10004
 
-#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#s.connect((host, port))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((host, port))
 
 
 # ## -------------------------------------------------------------------------------------------------------------- ## #
@@ -25,6 +25,18 @@ port = 10004
 # Funciones de procesamiento de datos
 
 # Divide el arreglo de datos por /, para separar aceleracion estado y temperatura
+
+
+def tim():
+    global ti
+    ti = int(time())
+tim()
+
+
+def margen():
+    if  (-1 + int(time())*1.0 - ti*1.0)%3 - 1.5 <= -1.25 or (-1 + int(time())*1.0 - ti*1.0)%3 >= 1.25:
+        return False
+    return True
 
 
 def agregar(x):
@@ -69,57 +81,9 @@ def xyz(sting):
     return r
 
 
-# ###-------------------------------------------------------------------------------------------------------### #
-
-# Funciones para avanzar, doblar a la izquierda, detenerse, doblar a la derecha e ir en reversa.
-
-def fd():
-    s.send(str.encode("Fwd."))
-    state.config(text="Avanzando")
-    return sensor2()
-
-
-def leftt():
-    s.send(str.encode("Lef."))
-    state.config(text="Izquierda")
-    return sensor2()
-
-
-def staph():
-    s.send(str.encode("Sto."))
-    state.config(text="Detenido")
-    return sensor2()
-
-
-def right():
-    s.send(str.encode("Rit."))
-    state.config(text="Derecha")
-    return sensor2()
-
-
-def bd():
-    s.send(str.encode("Bwd."))
-    state.config(text="Retrocediendo")
-    return sensor2()
-
-
-def fast():
-    s.send(str.encode("v25."))
-    return
-
-
-def mids():
-    s.send(str.encode("v18."))
-    return
-
-
-def slow():
-    s.send(str.encode("v15."))
-    return
-
-
 # ###--------------------------------------------------------------------------------------------------------------### #
 # Esta funcion lo que hace es cerrar completamente el servidor para que no se puedan reconectar los clientes
+
 
 def cl():
     s.send(str.encode("CLOSE"))
@@ -140,6 +104,63 @@ texto = open(nombre, 'w')
 
 
 vent = Tk.Tk()
+
+# ###-------------------------------------------------------------------------------------------------------### #
+
+# Funciones para avanzar, doblar a la izquierda, detenerse, doblar a la derecha e ir en reversa.
+
+def fd():
+    if margen():
+        s.send(str.encode("Fwd."))
+        state.config(text="Avanzando")
+        return sensor2()
+    else:
+        vent.after(400, fd)
+
+
+def leftt():
+    if margen():
+        s.send(str.encode("Lef."))
+        state.config(text="Izquierda")
+        return sensor2()
+    else:
+        vent.after(400, leftt)
+
+def staph():
+    if margen():
+        s.send(str.encode("Sto."))
+        state.config(text="Detenido")
+        return sensor2()
+    else:
+        vent.after(400, staph)
+
+
+def right():
+    if margen():
+        s.send(str.encode("Rit."))
+        state.config(text="Derecha")
+        return sensor2()
+    else:
+        vent.after(400, right)
+
+
+def bd():
+    if margen():
+        s.send(str.encode("Bwd."))
+        state.config(text="Retrocediendo")
+        return sensor2()
+    else:
+        vent.after(400, bd)
+
+def speed(event):
+    a = str(fast.get())
+    if margen():
+        print a
+        s.send(str.encode("v" + a + '.'))
+        return sensor2()
+    else:
+        vent.after(400, speed(a))
+
 
 
 # ###--------------------------------------------------------------------------------------------------------------### #
@@ -163,48 +184,27 @@ Fst = ImageTk.PhotoImage(imgt)
 
 # ###--------------------------------------------------------------------------------------------------------------### #
 
+fast = Tk.Scale(vent, from_=24, to=12, command=speed, length=420, sliderlength=50, width=50)
+fast.set(12)
+fast.pack(side=Tk.RIGHT)
 
 marco1 = Tk.Frame(vent)
 marco1.pack()
 
-fddr = Tk.Label(marco1, width=15)
-fddr.pack(side=Tk.LEFT)
-
-fd = Tk.Button(marco1, width=100, image=Fup, command=fd)
-fd.pack(side=Tk.LEFT)
-
-fdiz = Tk.Label(marco1, width=5)
-fdiz.pack(side=Tk.LEFT)
-
-marco11 = Tk.Frame(marco1)
-marco11.pack()
-
-marco12 = Tk.Frame(marco1)
-marco12.pack()
-
-marco13 = Tk.Frame(marco1)
-marco13.pack()
-
-fast1 = Tk.Button(marco11, width=10, text="Rapido", command=fast)
-fast1.pack(side=Tk.LEFT)
-
-fast2 = Tk.Button(marco12, width=10, text="Normal", command=mids)
-fast2.pack(side=Tk.LEFT)
-
-fast3 = Tk.Button(marco13, width=10, text="Lento", command=slow)
-fast3.pack(side=Tk.LEFT)
+fdbt = Tk.Button(marco1, width=100, image=Fup, command=fd)
+fdbt.pack(side=Tk.LEFT)
 
 marco2 = Tk.Frame(vent)
 marco2.pack()
 
-left = Tk.Button(marco2, width=100, image=Flf, command=right)
-left.pack(side=Tk.LEFT)
+leftbt = Tk.Button(marco2, width=100, image=Flf, command=right)
+leftbt.pack(side=Tk.LEFT)
 
-stop = Tk.Button(marco2, width=100, image=Fst, command=staph)
-stop.pack(side=Tk.LEFT)
+stopbt = Tk.Button(marco2, width=100, image=Fst, command=staph)
+stopbt.pack(side=Tk.LEFT)
 
-right = Tk.Button(marco2, width=100, image=Frt, command=leftt)
-right.pack(side=Tk.LEFT)
+rightbt = Tk.Button(marco2, width=100, image=Frt, command=leftt)
+rightbt.pack(side=Tk.LEFT)
 
 marco3 = Tk.Frame(vent)
 marco3.pack()
@@ -241,6 +241,13 @@ close.pack(side=Tk.LEFT)
 
 state = Tk.Label(admin, width=10, text="Detenido")
 state.pack()
+
+giro = Tk.Frame(vent)
+giro.pack()
+
+fast1 = Tk.Scale(giro, orient=Tk.HORIZONTAL, resolution=10, from_=-90, to=90, length=400, sliderlength=50, width=50)
+fast1.set(0)
+fast1.pack(side=Tk.RIGHT)
 
 
 def add_time():

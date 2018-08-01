@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 
 # Declaracion de todas las variables usadas mas adelante en el programa
 
-
 # Momento en que empieza a correr el programa para saber cuanto tiempo lleva corriendo
 tinicial = int(time())
 
@@ -14,18 +13,26 @@ ZeroTier = '88503383909a8fc4'
 
 # direccion IP del host del server y el numero de puerto usado
 host = '192.168.43.46'
-port = 10004
+port = 10005
 
 #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.connect((host, port))
 
+# ###-------------------------------------------------------------------------------------------------------------- ## #
+# Seteo de las globales para enviar el mensaje importante
 
-# ## -------------------------------------------------------------------------------------------------------------- ## #
+# el string que se enviara constantemente se divide en 3 cosas, divididas por "/"
+# estado -> 8 = Avanzando, 5 = Detenido, 2 = Retroceder, 4 = Izquierda, 6 = Derecha
+# Cam -> Un numero entre -90 y +90 , solo se envian multiplos de 10
+# Vel -> Un numero entre 12 y 24, que representa que tan rapido va el robot
 
+estado = 5
+cam = 0
+vel = 12
+
+
+# ###--------------------------------------------------------------------------------------------------------------### #
 # Funciones de procesamiento de datos
-
-# Divide el arreglo de datos por /, para separar aceleracion estado y temperatura
-
 
 def agregar(x):
     m = x[0:len(x) - 1] + '/' + str(time()) + "]"
@@ -69,57 +76,9 @@ def xyz(sting):
     return r
 
 
-# ###-------------------------------------------------------------------------------------------------------### #
-
-# Funciones para avanzar, doblar a la izquierda, detenerse, doblar a la derecha e ir en reversa.
-
-def fd():
-    s.send(str.encode("Fwd."))
-    state.config(text="Avanzando")
-    return sensor2()
-
-
-def leftt():
-    s.send(str.encode("Lef."))
-    state.config(text="Izquierda")
-    return sensor2()
-
-
-def staph():
-    s.send(str.encode("Sto."))
-    state.config(text="Detenido")
-    return sensor2()
-
-
-def right():
-    s.send(str.encode("Rit."))
-    state.config(text="Derecha")
-    return sensor2()
-
-
-def bd():
-    s.send(str.encode("Bwd."))
-    state.config(text="Retrocediendo")
-    return sensor2()
-
-
-def fast():
-    s.send(str.encode("v25."))
-    return
-
-
-def mids():
-    s.send(str.encode("v18."))
-    return
-
-
-def slow():
-    s.send(str.encode("v15."))
-    return
-
-
 # ###--------------------------------------------------------------------------------------------------------------### #
 # Esta funcion lo que hace es cerrar completamente el servidor para que no se puedan reconectar los clientes
+
 
 def cl():
     s.send(str.encode("CLOSE"))
@@ -129,7 +88,7 @@ def cl():
 
 # Abrimos este archivo de texto para guardar todos los
 
-nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos")
+nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos: ")
 
 texto = open(nombre, 'w')
 
@@ -140,6 +99,53 @@ texto = open(nombre, 'w')
 
 
 vent = Tk.Tk()
+
+
+# ###-------------------------------------------------------------------------------------------------------### #
+
+
+# Funciones para avanzar, doblar a la izquierda, detenerse, doblar a la derecha e ir en reversa.
+
+def fd(st):
+    st = "8"
+    state.config(text="Avanzando")
+    return
+
+
+def leftt():
+    estado = "4"
+    state.config(text="Izquierda")
+    return
+
+
+def staph():
+    estado = "5"
+    state.config(text="Detenido")
+    return
+
+
+def right():
+    estado = "6"
+    state.config(text="Derecha")
+    return
+
+
+def bd():
+    estado = "2"
+    state.config(text="Retrocediendo")
+    return
+
+
+def speed(event):
+    a = str(fast.get())
+    vel = a
+    return
+
+
+def camara(event):
+    a = str(fast1.get())
+    cam = a
+    return
 
 
 # ###--------------------------------------------------------------------------------------------------------------### #
@@ -160,51 +166,29 @@ Frt = ImageTk.PhotoImage(imgt)
 imgt = Image.open("Fst.png")
 Fst = ImageTk.PhotoImage(imgt)
 
-
 # ###--------------------------------------------------------------------------------------------------------------### #
 
+fast = Tk.Scale(vent, from_=24, to=12, command=speed, length=420, sliderlength=50, width=50)
+fast.set(12)
+fast.pack(side=Tk.RIGHT)
 
 marco1 = Tk.Frame(vent)
 marco1.pack()
 
-fddr = Tk.Label(marco1, width=15)
-fddr.pack(side=Tk.LEFT)
-
-fd = Tk.Button(marco1, width=100, image=Fup, command=fd)
-fd.pack(side=Tk.LEFT)
-
-fdiz = Tk.Label(marco1, width=5)
-fdiz.pack(side=Tk.LEFT)
-
-marco11 = Tk.Frame(marco1)
-marco11.pack()
-
-marco12 = Tk.Frame(marco1)
-marco12.pack()
-
-marco13 = Tk.Frame(marco1)
-marco13.pack()
-
-fast1 = Tk.Button(marco11, width=10, text="Rapido", command=fast)
-fast1.pack(side=Tk.LEFT)
-
-fast2 = Tk.Button(marco12, width=10, text="Normal", command=mids)
-fast2.pack(side=Tk.LEFT)
-
-fast3 = Tk.Button(marco13, width=10, text="Lento", command=slow)
-fast3.pack(side=Tk.LEFT)
+fdbt = Tk.Button(marco1, width=100, image=Fup, command=fd(estado))
+fdbt.pack(side=Tk.LEFT)
 
 marco2 = Tk.Frame(vent)
 marco2.pack()
 
-left = Tk.Button(marco2, width=100, image=Flf, command=right)
-left.pack(side=Tk.LEFT)
+leftbt = Tk.Button(marco2, width=100, image=Flf, command=right)
+leftbt.pack(side=Tk.LEFT)
 
-stop = Tk.Button(marco2, width=100, image=Fst, command=staph)
-stop.pack(side=Tk.LEFT)
+stopbt = Tk.Button(marco2, width=100, image=Fst, command=staph)
+stopbt.pack(side=Tk.LEFT)
 
-right = Tk.Button(marco2, width=100, image=Frt, command=leftt)
-right.pack(side=Tk.LEFT)
+rightbt = Tk.Button(marco2, width=100, image=Frt, command=leftt)
+rightbt.pack(side=Tk.LEFT)
 
 marco3 = Tk.Frame(vent)
 marco3.pack()
@@ -242,6 +226,14 @@ close.pack(side=Tk.LEFT)
 state = Tk.Label(admin, width=10, text="Detenido")
 state.pack()
 
+giro = Tk.Frame(vent)
+giro.pack()
+
+fast1 = Tk.Scale(giro, orient=Tk.HORIZONTAL, command=camara, resolution=10, from_=-90, to=90, length=400,
+                 sliderlength=50, width=50)
+fast1.set(0)
+fast1.pack(side=Tk.RIGHT)
+
 
 def add_time():
     tiempo = str(int(time()) - tinicial - 1)
@@ -250,8 +242,11 @@ def add_time():
     vent.after(500, add_time)
 
 
-def sensor2():
-    s.send(str.encode("Ser."))
+def sensor(estado,cam,vel):
+    # print "{}/{}/{}".format(estado,cam,vel)
+    print str(estado) + '/' + str(cam) + '/' + str(vel)
+    mesage = str(estado) + '/' + str(cam) + '/' + str(vel)
+    s.send(str.encode(mesage))
     men = s.recv(1024)
 
     texto.write(agregar(men) + '\n')
@@ -282,44 +277,11 @@ def sensor2():
     if estado == '2':
         print "Retrocediendo"
 
-
-def sensor():
-    s.send(str.encode("Ser."))
-    men = s.recv(1024)
-
-    texto.write(agregar(men) + '\n')
-
-    data = divide(men)
-
-    acce = element2(data, 0)
-    acce = element1(acce)
-    acce = xyz(acce)
-
-    accel.config(text=str(acce))
-
-    estado = element2(data, 1)
-
-    temp = element2(data, 2)
-    temp = element3(temp)
-    temp = int(temp) * 0.48828125 * 10 // 10
-    temper.config(text=str(temp) + 'C')
-
-    if estado == '8':
-        print "Avanzando"
-    if estado == '5':
-        print "Detenido"
-    if estado == '4':
-        print "Izquierda"
-    if estado == '6':
-        print "Derecha"
-    if estado == '2':
-        print "Retrocediendo"
-
-    vent.after(3000, sensor)
+    vent.after(100, sensor)
 
 
 vent.after(0, add_time)
-vent.after(1000, sensor)
+vent.after(1000, sensor(estado,cam,vel))
 vent.mainloop()
 print("se ha cerrado la ventana")
 
