@@ -8,8 +8,8 @@ tinicial = int(time.time())
 host = '192.168.42.46'
 port = 10005
 
-#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#s.connect((host,port))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((host,port))
 
 estado = 5
 cam = 0
@@ -51,6 +51,11 @@ def bwd():
     global estado
     estado = 2
     ESTADO.config(text="Retrocediendo")
+    return
+
+def cl():
+    s.send(str.encode("CLOSE"))
+    vent.destroy()
     return
 
 
@@ -108,7 +113,7 @@ rightbt.pack(side=Tk.LEFT)
 marco3 = Tk.Frame(vent)
 marco3.pack()
 
-Bd = Tk.Button(marco3, width=100, image=Fdw, command=bd)
+Bd = Tk.Button(marco3, width=100, image=Fdw, command=bwd)
 Bd.pack()
 
 marco4 = Tk.Frame(vent)
@@ -148,3 +153,51 @@ fast1 = Tk.Scale(giro, orient=Tk.HORIZONTAL, command=camara, resolution=10, from
                  sliderlength=50, width=50)
 fast1.set(0)
 fast1.pack(side=Tk.RIGHT)
+
+def add_time():
+    tiempo = str(int(time()) - tinicial - 1)
+    rolex.config(text=tiempo)
+    vent.after(500, add_time)
+
+def sensor():
+    global estado,cam,vel
+    print str(estado) + '/' + str(cam) + '/' + str(vel)
+    message = str(estado) + '/' + str(cam) + '/' + str(vel)
+    s.send(str.encode(message))
+    men = s.recv(1024)
+
+    texto.write(men + '\n')
+
+    data = men.split(':')
+
+    acceleration = data[0].split('/')
+    acceleration = acceleration[0] + acceleration[1]+ acceleration[2]
+    accel.config(text=str(acceleration))
+
+    estado = data[1]
+
+    temp = data[3]
+    temp = int(temp) * 0.48828125 * 10 // 10
+    temper.config(text=str(temp) + 'C')
+
+    if estado == '8':
+        print "Avanzando"
+    if estado == '5':
+        print "Detenido"
+    if estado == '4':
+        print "Izquierda"
+    if estado == '6':
+        print "Derecha"
+    if estado == '2':
+        print "Retrocediendo"
+
+    vent.after(100, sensor)
+
+vent.after(0, add_time)
+vent.after(1000, sensor())
+vent.mainloop()
+print("se ha cerrado la ventana")
+
+s.close()
+
+texto.close()

@@ -91,17 +91,9 @@ def data_transfer(conn):
         elif data == 'Ser.':
             datos = read_serial()
             conn.sendall(str.encode(datos))
-<<<<<<< HEAD
         elif data[0]=='v':
             print 'Cambiando la velocidad'
-=======
-<<<<<<< HEAD
-        elif data[0]=='v':
-            print 'Cambiando la velocidad'
-=======
         elif data[0] == 'v':
->>>>>>> a30c6651e755a2258fd4b6db5f39271809038de4
->>>>>>> 8c0aef81324a90cbae1e74999f33154369e34232
             ser.write(data)
         elif data == 'CLOSE':
             ser.write('Sto.')
