@@ -1,9 +1,9 @@
 /*
 Control de motores de CC con CI L298
 
-
-
 */
+#include <Servo.h>
+Servo camara;
 // Pines de entrada para CI L298
 #define MOTOR_CTL1  8  // I1 Input 1
 #define MOTOR_CTL2  10  // I2 Input 1
@@ -30,6 +30,7 @@ int Status = 5; //Estado de motores
 
 int acelx, acely, acelz;  //aceleraciones por eje
 
+
 void setup(){
    // Configuracion de pines para control del motor   
    // Control de sentido de giro
@@ -43,7 +44,8 @@ void setup(){
    pinMode(MOTOR_PWM1,OUTPUT);
    Serial.begin(115200);   
    inputString.reserve(200);
-   setSpeed(v);   
+   setSpeed(v);
+   camara.attach(12);   
 }
 
 // Control de velocidad mediante PWM
@@ -168,7 +170,13 @@ void loop(){
       Status = 5;
     }
     else if(d=="v"){
+      //Serial.print(c);
       setSpeed(c.substring(1,3).toInt()*10);      
+    }
+    
+    else if(d=="c"){
+      
+      camara.write(c.substring(1,3).toInt()+90);
     }
     
     else if(c == "Ser"){      

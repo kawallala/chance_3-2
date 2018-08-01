@@ -5,9 +5,10 @@ from serial import *
 
 # variables necesarias para la iniciacion
 host = ''
-port = 10005
+port = 10011
 ser = Serial('/dev/ttyACM0', 115200)
 dict = { 8 : 'Fwd.' , 5 : 'Sto.',  2: 'Bwd.' , 4:'Let.' , 6:'Rit.'} 
+data_old = ['5',"0","12"]
 
 def setup_server():
     """
@@ -57,14 +58,28 @@ def read_serial():
             accion = ser.read()
             b = b + accion
         ser.flush()
-    print b
     return b
 
 def dataCompare(data1,data2):
     for i in range(len(data1)):
         if data1[i] != data2[i]:
             if i == 0:
-                ser.write(dict[data1])
+                if data1[i] == '8':
+                    ser.write('Fwd.')
+                elif data1[i] == '4':
+                    ser.write('Lef.')
+                elif data1[i] == '6':
+                    ser.write('Rit.')
+                elif data1[i] == '5':
+                    ser.write('Sto.')
+                elif data1[i] == '2':
+                    ser.write('Bwd.')
+            elif i == 1:
+                print 'c' + data1[1] + '.'
+                ser.write('c' + data1[1] + '.')
+            elif i == 2:
+                print 'v' + data1[2] + '.'
+                ser.write('v' + data1[2] + '.')
                 
 
 
@@ -78,23 +93,30 @@ def data_transfer(conn):
     """
     # lo que hay aqui recibe y envia datos
     while True:
+        global data_old
         # recibo datos
-        data_old = ['5',"90","12"]
         data = conn.recv(1024)
-        data = data.decode('utf-8')
+        print data
         data = data.split('/')
         print data
-        if data == '':
+        if data == ['']:
             ser.write('Sto.')
             print 'Cliente perdido, Cerrando servidor'
             conn.close()
             s.close()
-            break 
+            break
+        elif data == ['CLOSE']:
+            ser.write('Sto.')
+            print 'Cliente desconectado, Cerrando servidor'
+            conn.close()
+            s.close()
+            break
         else:
-            if data != data_old:
-                dataCompare(data,data_old)
-                read_serial()
-                data_old = data
+            dataCompare(data,data_old)
+            a=read_serial()
+            print a
+            conn.sendall(a)                       
+            data_old = data
         print "Data has been sent!"
 
 
@@ -116,6 +138,4 @@ def go():
             setup_all()
         except:
             break
-
-
 go()
