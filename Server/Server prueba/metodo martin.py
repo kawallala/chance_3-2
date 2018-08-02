@@ -5,8 +5,8 @@ from PIL import Image, ImageTk
 
 tinicial = int(time.time())
 
-host = '192.168.42.46'
-port = 10005
+host = '192.168.43.46'
+port = 10000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host,port))
@@ -68,8 +68,8 @@ def speed(event):
 
 def camara(event):
     global cam
-    a = str(fast1.get())
-    cam = a
+    a = fast1.get()
+    cam = str(90 + a)
     return
 
 vent = Tk.Tk()
@@ -155,28 +155,29 @@ fast1.set(0)
 fast1.pack(side=Tk.RIGHT)
 
 def add_time():
-    tiempo = str(int(time()) - tinicial - 1)
+    tiempo = str(int(time.time()) - tinicial - 1)
     rolex.config(text=tiempo)
     vent.after(500, add_time)
 
 def sensor():
     global estado,cam,vel
-    print str(estado) + '/' + str(cam) + '/' + str(vel)
     message = str(estado) + '/' + str(cam) + '/' + str(vel)
     s.send(str.encode(message))
     men = s.recv(1024)
 
     texto.write(men + '\n')
 
-    data = men.split(':')
+    data = men[1:len(men)-1]
+    data = data.split('/')
 
-    acceleration = data[0].split('/')
-    acceleration = acceleration[0] + acceleration[1]+ acceleration[2]
+    acceleration = data[0].split(';')
+    print acceleration
+    acceleration = acceleration[0] + acceleration[1] + acceleration[2]
     accel.config(text=str(acceleration))
 
     estado = data[1]
 
-    temp = data[3]
+    temp = data[2]
     temp = int(temp) * 0.48828125 * 10 // 10
     temper.config(text=str(temp) + 'C')
 
