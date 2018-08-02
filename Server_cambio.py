@@ -5,10 +5,10 @@ from serial import *
 
 # variables necesarias para la iniciacion
 host = ''
-port = 10011
+port = 10000
 ser = Serial('/dev/ttyACM0', 115200)
 dict = { 8 : 'Fwd.' , 5 : 'Sto.',  2: 'Bwd.' , 4:'Let.' , 6:'Rit.'} 
-data_old = ['5',"0","12"]
+data_old = ['5',"90","12"]
 
 def setup_server():
     """
@@ -20,7 +20,6 @@ def setup_server():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print("socket created")
     try:
-        
         s.bind((host, port))
     except socket.error as msg:
         print(msg)
@@ -75,8 +74,9 @@ def dataCompare(data1,data2):
                 elif data1[i] == '2':
                     ser.write('Bwd.')
             elif i == 1:
-                print 'c' + data1[1] + '.'
-                ser.write('c' + data1[1] + '.')
+                a = int(data1[1])/10
+                print 'c' + str(a) + '.'
+                ser.write('c' + str(a) + '.')
             elif i == 2:
                 print 'v' + data1[2] + '.'
                 ser.write('v' + data1[2] + '.')
