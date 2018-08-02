@@ -101,13 +101,13 @@ fdbt.pack(side=Tk.LEFT)
 marco2 = Tk.Frame(vent)
 marco2.pack()
 
-leftbt = Tk.Button(marco2, width=100, image=Flf, command=rit)
+leftbt = Tk.Button(marco2, width=100, image=Flf, command=let)
 leftbt.pack(side=Tk.LEFT)
 
 stopbt = Tk.Button(marco2, width=100, image=Fst, command=sto)
 stopbt.pack(side=Tk.LEFT)
 
-rightbt = Tk.Button(marco2, width=100, image=Frt, command=let)
+rightbt = Tk.Button(marco2, width=100, image=Frt, command=rit)
 rightbt.pack(side=Tk.LEFT)
 
 marco3 = Tk.Frame(vent)
@@ -172,7 +172,7 @@ def sensor():
 
     acceleration = data[0].split(';')
     print acceleration
-    acceleration = acceleration[0] + acceleration[1] + acceleration[2]
+    acceleration = acceleration[0] + " X - " + acceleration[1] + " Y - " + acceleration[2] + " Z"
     accel.config(text=str(acceleration))
 
     estado = data[1]
