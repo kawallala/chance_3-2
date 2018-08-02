@@ -106,43 +106,50 @@ vent = Tk.Tk()
 
 # Funciones para avanzar, doblar a la izquierda, detenerse, doblar a la derecha e ir en reversa.
 
-def fd(st):
-    st = "8"
-    state.config(text="Avanzando")
+def fd():
+    global estado
+    estado = 8
+    ESTADO.config(text="Avanzando")
     return
 
 
 def leftt():
-    estado = "4"
-    state.config(text="Izquierda")
+    global estado
+    estado = 4
+    ESTADO.config(text="Izquierda")
     return
 
 
 def staph():
-    estado = "5"
-    state.config(text="Detenido")
+    global estado
+    estado = 5
+    ESTADO.config(text="Detenido")
     return
 
 
 def right():
-    estado = "6"
-    state.config(text="Derecha")
+    global estado
+    estado = 6
+    ESTADO.config(text="Derecha")
     return
 
 
 def bd():
-    estado = "2"
-    state.config(text="Retrocediendo")
+    global estado
+    estado = 2
+    ESTADO.config(text="Retrocediendo")
     return
 
 
 def speed(event):
+    global vel
     a = str(fast.get())
     vel = a
     return
 
 
 def camara(event):
+    global cam
     a = str(fast1.get())
     cam = a
     return
@@ -175,7 +182,7 @@ fast.pack(side=Tk.RIGHT)
 marco1 = Tk.Frame(vent)
 marco1.pack()
 
-fdbt = Tk.Button(marco1, width=100, image=Fup, command=fd(estado))
+fdbt = Tk.Button(marco1, width=100, image=Fup, command=fd())
 fdbt.pack(side=Tk.LEFT)
 
 marco2 = Tk.Frame(vent)
@@ -223,8 +230,8 @@ admin.pack()
 close = Tk.Button(admin, width=10, text="CLOSE", command=cl)
 close.pack(side=Tk.LEFT)
 
-state = Tk.Label(admin, width=10, text="Detenido")
-state.pack()
+ESTADO = Tk.Label(admin, width=10, text="Detenido")
+ESTADO.pack()
 
 giro = Tk.Frame(vent)
 giro.pack()
@@ -242,8 +249,8 @@ def add_time():
     vent.after(500, add_time)
 
 
-def sensor(estado,cam,vel):
-    # print "{}/{}/{}".format(estado,cam,vel)
+def sensor():
+    global estado,cam,vel
     print str(estado) + '/' + str(cam) + '/' + str(vel)
     mesage = str(estado) + '/' + str(cam) + '/' + str(vel)
     s.send(str.encode(mesage))
@@ -281,7 +288,7 @@ def sensor(estado,cam,vel):
 
 
 vent.after(0, add_time)
-vent.after(1000, sensor(estado,cam,vel))
+vent.after(1000, sensor())
 vent.mainloop()
 print("se ha cerrado la ventana")
 
