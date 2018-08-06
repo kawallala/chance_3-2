@@ -165,7 +165,7 @@ def sensor():
     s.send(str.encode(message))
     men = s.recv(1024)
 
-    texto.write(men + '\n')
+    texto.write(men + str(time.time()-tinicial) + '\n')
 
     data = men[1:len(men)-1]
     data = data.split('/')
