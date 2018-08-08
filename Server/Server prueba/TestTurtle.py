@@ -192,10 +192,8 @@ def sensor():
     if estado == '2':
         print "Retrocediendo"
 
-    vent.after(100, sensor)
 
 vent.after(0, add_time)
-vent.after(100, sensor())
 vent.mainloop()
 print("se ha cerrado la ventana")
 
