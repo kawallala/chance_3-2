@@ -172,7 +172,7 @@ void loop(){
     }
     else if(d=="v"){
       //Serial.print(c);
-      setSpeed(c.substring(1,3).toInt()*10);      
+      setSpeed((byte)(c.substring(1,3).toInt()*10));      
     }
     
     else if(d=="c"){

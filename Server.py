@@ -5,7 +5,7 @@ from serial import *
 
 # variables necesarias para la iniciacion
 host = ''
-port = 10004
+port = 10006
 ser = Serial('/dev/ttyACM0', 115200)
 
 
