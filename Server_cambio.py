@@ -65,14 +65,19 @@ def dataCompare(data1,data2):
             if i == 0:
                 if data1[i] == '8':
                     ser.write('Fwd.')
+                    print 'avanzando'
                 elif data1[i] == '4':
                     ser.write('Lef.')
+                    print 'izquierda'
                 elif data1[i] == '6':
                     ser.write('Rit.')
+                    print 'derecha'
                 elif data1[i] == '5':
                     ser.write('Sto.')
+                    print ' detenido'
                 elif data1[i] == '2':
                     ser.write('Bwd.')
+                    print 'retrocediendo'
             elif i == 1:
                 a = int(data1[1])/10
                 print 'c' + str(a) + '.'
@@ -96,9 +101,7 @@ def data_transfer(conn):
         global data_old
         # recibo datos
         data = conn.recv(1024)
-        print data
         data = data.split('/')
-        print data
         if data == ['']:
             ser.write('Sto.')
             print 'Cliente perdido, Cerrando servidor'
@@ -114,7 +117,6 @@ def data_transfer(conn):
         else:
             dataCompare(data,data_old)
             a=read_serial()
-            print a
             conn.sendall(a)                       
             data_old = data
         print "Data has been sent!"
