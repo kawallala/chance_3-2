@@ -1,4 +1,4 @@
-import socket
+mport socket
 import Tkinter as Tk
 import time
 from PIL import Image, ImageTk

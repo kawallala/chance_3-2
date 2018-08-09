@@ -5,14 +5,14 @@ from PIL import Image, ImageTk
 
 tinicial = int(time.time())
 
-host = '172.30.1.1'
+host = '192.168.43.46'
 port = 10000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host,port))
 
 estado = 5
-cam = 0
+cam = 90
 vel = 12
 
 nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos: ")
@@ -59,11 +59,11 @@ def cl():
     return
 
 
-def speed(event):
-    global vel
-    a = str(fast.get())
-    vel = a
-    return
+#def speed(event):
+    #global vel
+    #a = str(fast.get())
+    #vel = a
+    #return
 
 
 def camara(event):
@@ -88,9 +88,10 @@ Frt = ImageTk.PhotoImage(imgt)
 
 imgt = Image.open("Fst.png")
 Fst = ImageTk.PhotoImage(imgt)
-fast = Tk.Scale(vent, from_=24, to=12, command=speed, length=420, sliderlength=50, width=50)
-fast.set(12)
-fast.pack(side=Tk.RIGHT)
+
+#fast = Tk.Scale(vent, from_=24, to=12, command=speed, length=420, sliderlength=50, width=50)
+#fast.set(12)
+#fast.pack(side=Tk.RIGHT)
 
 marco1 = Tk.Frame(vent)
 marco1.pack()
@@ -162,7 +163,7 @@ def add_time():
 def sensor():
     global estado,cam,vel
     message = str(estado) + '/' + str(cam) + '/' + str(vel)
-    print message
+    #print message
     s.send(message)
     men = s.recv(1024)
 
@@ -170,8 +171,9 @@ def sensor():
 
     data = men[1:len(men)-1]
     data = data.split('/')
-
+    #print data
     acceleration = data[0].split(';')
+    #print acceleration
     acceleration = acceleration[0] + " X - " + acceleration[1] + " Y - " + acceleration[2] + " Z"
     accel.config(text=str(acceleration))
 
