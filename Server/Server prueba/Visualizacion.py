@@ -8,7 +8,7 @@ pos = []
 accx = []
 accy = []
 accz = []
-t = [t for t in range(632)]
+t = [t for t in range(3192)]
 T = []
 
 for line in datos:

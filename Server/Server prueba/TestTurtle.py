@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 
 tinicial = int(time.time())
 
-host = '172.30.1.1'
+host = '192.168.43.46'
 port = 10000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -162,8 +162,7 @@ def add_time():
 def sensor():
     global estado,cam,vel
     message = str(estado) + '/' + str(cam) + '/' + str(vel)
-    print message
-    s.send(message)
+    s.send(str.encode(message))
     men = s.recv(1024)
 
     texto.write(men[0:len(men)-1] + '/' + str(vel) + '/' + str(time.time()-tinicial) + ']' + '\n')
@@ -172,6 +171,7 @@ def sensor():
     data = data.split('/')
 
     acceleration = data[0].split(';')
+    print acceleration
     acceleration = acceleration[0] + " X - " + acceleration[1] + " Y - " + acceleration[2] + " Z"
     accel.config(text=str(acceleration))
 
@@ -192,10 +192,8 @@ def sensor():
     if estado == '2':
         print "Retrocediendo"
 
-    vent.after(100, sensor)
 
 vent.after(0, add_time)
-vent.after(100, sensor())
 vent.mainloop()
 print("se ha cerrado la ventana")
 
