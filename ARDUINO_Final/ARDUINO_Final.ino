@@ -20,7 +20,7 @@ Servo camara;
 #define MOTOR_DIR_RIGHT  0   // Adelante
 #define MOTOR_DIR_LEFT  1  // Atras
 
-int v=150; //velocidad
+int v=10; //velocidad
 
 String inputString = "";       
 boolean stringComplete = false;
@@ -177,7 +177,7 @@ void loop(){
     
     else if(d=="c"){
       
-      camara.write(c.substring(1,3).toInt()+90);
+      camara.write(c.substring(1,3).toInt()*10);
     }
     
     else if(c == "Ser"){      

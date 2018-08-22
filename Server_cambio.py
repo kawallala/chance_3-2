@@ -102,6 +102,7 @@ def data_transfer(conn):
         # recibo datos
         data = conn.recv(1024)
         data = data.split('/')
+        #print data
         if data == ['']:
             ser.write('Sto.')
             print 'Cliente perdido, Cerrando servidor'
@@ -117,9 +118,10 @@ def data_transfer(conn):
         else:
             dataCompare(data,data_old)
             a=read_serial()
+            #print a
             conn.sendall(a)                       
             data_old = data
-        print "Data has been sent!"
+        print "Data Sent"
 
 
 def setup_all():
