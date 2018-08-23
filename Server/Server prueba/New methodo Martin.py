@@ -3,39 +3,28 @@ import Tkinter as Tk
 import time
 from PIL import Image, ImageTk
 
-# ### ------------------------------------------------------------------------------------### #
-
-# En esta seccion del codigo estan escritas todas las constantes usadas más abajo
-
-# el momento en el que se ejecuto el programa
 tinicial = int(time.time())
 
-# La direccion ip del servidor y el puerto usado para la coneccion servidor-cliente (raspberry-nosotros)
-host = '192.168.42.46'
-port = 10005
+Iter = 0
 
-# El socket creado para la conexion
+host = '172.30.1.1'
+port = 10000
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host,port))
 
-# Estos son los 3 parametros que le dicen a la raspberry como actuar, siendo estado el si avanza, se detiene
-# gira o retrocede, cam es el angulo de la camara entre -90 y 90 y vel el voltaje aplicado a los motores
-#del robot siendo 12 el minimo y 24 el maximo
 estado = 5
-cam = 0
+cam = 90
 vel = 12
 
-# El nombre del archivo donde se van a guarddar todos los datos recopilados por el robot 
 nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos: ")
 
-# Se abre el archivo
 texto = open(nombre, 'w')
 
-# ### ------------------------------------------------------------------------------------### #
+nam = raw_input("Ingrese el nombre del archivo con los comandos, para uso manual insertar 00")
+if nam != "00":
+    neim = open(nam, 'r')
 
-# None -> None
-# Las 5 siguientes funciones sirven para manejar el robot, lo hacen avanzar
-# girar a la izquierda, detenerse, girar a la derecha y retroceder respectivamente
 
 def fwd():
     global estado
@@ -71,40 +60,24 @@ def bwd():
     ESTADO.config(text="Retrocediendo")
     return
 
-# None -> None
-# Esta funcion sirve para cerrar la ventana y terminar el servidor que esta corriendo en la 
-# raspberry
-
 def cl():
     s.send(str.encode("CLOSE"))
     vent.destroy()
     return
 
-# None -> None
-# Esta funcion cambia el parametro vel, que representa el voltaje que se le envian a los motores,
-# para cambiar la velocidad de estos
 
-def speed(event):
-    global vel
-    a = str(fast.get())
-    vel = a
-    return
+#def speed(event):
+    #global vel
+    #a = str(fast.get())
+    #vel = a
+    #return
 
-# None -> None
-# Esta funcion modifica el parametro cam, que representa los grados a los cuales se posiciona el
-# servomotor que sostiene la camara
 
 def camara(event):
     global cam
-    a = str(fast1.get())
-    cam = a
+    a = fast1.get()
+    cam = str(90 + a)
     return
-
-
-# ### ------------------------------------------------------------------------------------### #
-
-# Esta parte son todas las partes que conforman a nuestra Interfaz grafica 
-
 
 vent = Tk.Tk()
 
@@ -122,9 +95,10 @@ Frt = ImageTk.PhotoImage(imgt)
 
 imgt = Image.open("Fst.png")
 Fst = ImageTk.PhotoImage(imgt)
-fast = Tk.Scale(vent, from_=24, to=12, command=speed, length=420, sliderlength=50, width=50)
-fast.set(12)
-fast.pack(side=Tk.RIGHT)
+
+#fast = Tk.Scale(vent, from_=24, to=12, command=speed, length=420, sliderlength=50, width=50)
+#fast.set(12)
+#fast.pack(side=Tk.RIGHT)
 
 marco1 = Tk.Frame(vent)
 marco1.pack()
@@ -135,13 +109,13 @@ fdbt.pack(side=Tk.LEFT)
 marco2 = Tk.Frame(vent)
 marco2.pack()
 
-leftbt = Tk.Button(marco2, width=100, image=Flf, command=rit)
+leftbt = Tk.Button(marco2, width=100, image=Flf, command=let)
 leftbt.pack(side=Tk.LEFT)
 
 stopbt = Tk.Button(marco2, width=100, image=Fst, command=sto)
 stopbt.pack(side=Tk.LEFT)
 
-rightbt = Tk.Button(marco2, width=100, image=Frt, command=let)
+rightbt = Tk.Button(marco2, width=100, image=Frt, command=rit)
 rightbt.pack(side=Tk.LEFT)
 
 marco3 = Tk.Frame(vent)
@@ -188,61 +162,74 @@ fast1 = Tk.Scale(giro, orient=Tk.HORIZONTAL, command=camara, resolution=10, from
 fast1.set(0)
 fast1.pack(side=Tk.RIGHT)
 
-# ### ------------------------------------------------------------------------------------### #
-
-
-# None -> None
-# Esta funcion modifica el label rolex en nuestra interfaz, que representa cuanto tiempo ha
-# pasado desde que se abrio la interfaz.
-
 def add_time():
-    tiempo = str(int(time()) - tinicial - 1)
+    tiempo = str(int(time.time()) - tinicial - 1)
     rolex.config(text=tiempo)
     vent.after(500, add_time)
 
-# None -> None
-# Esta funcion le envia a la raspberry los parametros estado, cam y vel repectivamente ,
-# despues espera a recibir la informacion de los sensores y la muestra dentro de nuestra 
-# interfaz modificando los labels accel (aceleracion del robot), temper (temperatura en
-# donde esta el robot) y estado (si esta avanzando , detenido, etc...)
-# Ademas esta funcion se repite cada 0.1 segundos
-
-def sensor():
-    global estado,cam,vel
-    print str(estado) + '/' + str(cam) + '/' + str(vel)
+def sensorauto():
+    global estado,cam,vel,Iter
+    a = 0
+    for line in neim:
+        global estado
+        if a == Iter:
+            if line == "Avanzando":
+                global estado
+                estado = '8'
+            if line == "Detenido":
+                global estado
+                estado = '5'
+            if line == "Izquierda":
+                global estado
+                estado = '4'
+            if line == "Derecha":
+                global estado
+                estado = '6'
+            if line == "Retrocediendo":
+                global estado
+                estado = '2'
+            break
+        a = a + 1
+        
     message = str(estado) + '/' + str(cam) + '/' + str(vel)
-    s.send(str.encode(message))
+    #print message
+    s.send(message)
     men = s.recv(1024)
 
-    texto.write(men + '\n')
+    texto.write(men[0:len(men)-1] + '/' + str(vel) + '/' + str(time.time()-tinicial) + ']' + '\n')
 
-    data = men.split(':')
-
-    acceleration = data[0].split('/')
-    acceleration = acceleration[0] + acceleration[1]+ acceleration[2]
+    data = men[1:len(men)-1]
+    data = data.split('/')
+    acceleration = data[0].split(';')
+    acceleration = acceleration[0] + " X - " + acceleration[1] + " Y - " + acceleration[2] + " Z"
     accel.config(text=str(acceleration))
 
     estado = data[1]
 
-    temp = data[3]
+    temp = data[2]
     temp = int(temp) * 0.48828125 * 10 // 10
     temper.config(text=str(temp) + 'C')
 
     if estado == '8':
+        ESTADO.config(text="Avanzando")
         print "Avanzando"
     if estado == '5':
+        ESTADO.config(text="Detenido")
         print "Detenido"
     if estado == '4':
+        ESTADO.config(text="Izquierda")
         print "Izquierda"
     if estado == '6':
+        ESTADO.config(text="Derecha")
         print "Derecha"
     if estado == '2':
+        ESTADO.config(text="Retrocediendo")
         print "Retrocediendo"
-
-    vent.after(100, sensor)
+    Iter = Iter + 1
+    vent.after(100, sensorauto)
 
 vent.after(0, add_time)
-vent.after(100, sensor())
+vent.after(100, sensorauto())
 vent.mainloop()
 print("se ha cerrado la ventana")
 

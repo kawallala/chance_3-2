@@ -1,24 +1,48 @@
-import socket
-import Tkinter as Tk
-import time
-from PIL import Image, ImageTk
+## Librerias utilizadas para el funcionamientoo del reobot ##
 
+import socket  ## Nos permite conectarnos por internet ##
+import Tkinter as Tk  ## Nos permite crear una ventana para la GUI ##
+import time  ## Nos permite saber el "tiempo" ##
+from PIL import Image, ImageTk ## Nos permite ver imagenes en la GUI ##
+
+
+## Constantes utilizadas ##
+
+
+## Nos dice el momento en el que abrimos nuestro programa ##
 tinicial = int(time.time())
 
-host = '192.168.43.46'
-port = 10000
 
+## La direccion ip de la raspberry pi, y el ppuerto por el que nos conectamos ##
+host = '192.168.43.46'
+port = 10001
+
+
+## Creamos el socket para conectarnos al servido a travez de internet ##
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host,port))
 
+
+##Estado inicial del robot (Detenido, camar mirando al frente) ##
 estado = 5
 cam = 90
 vel = 12
 
+
+## Abrimos un archivo txt para insertar los datos obtenidos por el robot ##
 nombre = raw_input("Ingrese el nombre del archivo donde guardara sus datos: ")
 
 texto = open(nombre, 'w')
 
+
+## Funciones para manejar el robot ##
+
+## Estas funciones cambian la variable estado antes mencionada para hacer que el robot
+## avance, gire a la derecha, se detenga, gire a la izquierda o se detenga
+## respectivamente
+
+
+# None -> None
 def fwd():
     global estado
     estado = 8
@@ -26,6 +50,7 @@ def fwd():
     return
 
 
+# None -> None
 def let():
     global estado
     estado = 4
@@ -33,6 +58,7 @@ def let():
     return
 
 
+# None -> None
 def sto():
     global estado
     estado = 5
@@ -40,6 +66,7 @@ def sto():
     return
 
 
+# None -> None
 def rit():
     global estado
     estado = 6
@@ -47,12 +74,16 @@ def rit():
     return
 
 
+# None -> None
 def bwd():
     global estado
     estado = 2
     ESTADO.config(text="Retrocediendo")
     return
 
+
+# Esta funcion cierra la ventana
+# None -> None
 def cl():
     s.send(str.encode("CLOSE"))
     vent.destroy()
@@ -65,12 +96,18 @@ def cl():
     #vel = a
     #return
 
-
+# Esta funcion lee el slider que hay en la ventana y cambia la variable cam 
+# antes mencionada
+# None -> None
 def camara(event):
     global cam
     a = fast1.get()
     cam = str(90 + a)
     return
+
+
+# Todas estaas funciones son las que crean objetos dentro de nuestra ventada
+# (Botones, Labels y un Slider) uzando la libreria Tkinter
 
 vent = Tk.Tk()
 
@@ -173,7 +210,7 @@ def sensor():
     data = data.split('/')
     #print data
     acceleration = data[0].split(';')
-    #print acceleration
+    print acceleration
     acceleration = acceleration[0] + " X - " + acceleration[1] + " Y - " + acceleration[2] + " Z"
     accel.config(text=str(acceleration))
 
