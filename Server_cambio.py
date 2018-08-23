@@ -5,8 +5,8 @@ from serial import *
 
 # variables necesarias para la iniciacion
 host = ''
-port = 10000
-ser = Serial('/dev/ttyACM0', 115200)
+port = 10001
+ser = Serial('/dev/ttyUSBO', 115200)
 dict = { 8 : 'Fwd.' , 5 : 'Sto.',  2: 'Bwd.' , 4:'Let.' , 6:'Rit.'} 
 data_old = ['5',"90","12"]
 
@@ -79,7 +79,7 @@ def dataCompare(data1,data2):
                     ser.write('Bwd.')
                     print 'retrocediendo'
             elif i == 1:
-                a = int(data1[1])/10
+                a = int(data1[1])/(-10)
                 print 'c' + str(a) + '.'
                 ser.write('c' + str(a) + '.')
             elif i == 2:

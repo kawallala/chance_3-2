@@ -8,7 +8,7 @@ pos = []
 accx = []
 accy = []
 accz = []
-t = [t for t in range(3192)]
+
 T = []
 
 for line in datos:
@@ -22,6 +22,7 @@ for line in datos:
     accz.append(acceleraciones[2])
     T.append(line[2])
 
+t = [t for t in range(len(accx))]
 plt.plot(t,accx)
 plt.plot(t,accy)
 plt.plot(t,accz)
