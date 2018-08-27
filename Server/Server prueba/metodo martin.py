@@ -26,7 +26,6 @@ s.connect((host,port))
 ##Estado inicial del robot (Detenido, camar mirando al frente) ##
 estado = 5
 cam = 90
-vel = 12
 
 
 ## Abrimos un archivo txt para insertar los datos obtenidos por el robot ##
@@ -90,12 +89,6 @@ def cl():
     return
 
 
-#def speed(event):
-    #global vel
-    #a = str(fast.get())
-    #vel = a
-    #return
-
 # Esta funcion lee el slider que hay en la ventana y cambia la variable cam 
 # antes mencionada
 # None -> None
@@ -125,10 +118,6 @@ Frt = ImageTk.PhotoImage(imgt)
 
 imgt = Image.open("Fst.png")
 Fst = ImageTk.PhotoImage(imgt)
-
-#fast = Tk.Scale(vent, from_=24, to=12, command=speed, length=420, sliderlength=50, width=50)
-#fast.set(12)
-#fast.pack(side=Tk.RIGHT)
 
 marco1 = Tk.Frame(vent)
 marco1.pack()
@@ -198,9 +187,8 @@ def add_time():
     vent.after(500, add_time)
 
 def sensor():
-    global estado,cam,vel
-    message = str(estado) + '/' + str(cam) + '/' + str(vel)
-    #print message
+    global estado,cam
+    message = str(estado) + '/' + str(cam) + '/' + str(vel) 
     s.send(message)
     men = s.recv(1024)
 
@@ -208,7 +196,7 @@ def sensor():
 
     data = men[1:len(men)-1]
     data = data.split('/')
-    #print data
+
     acceleration = data[0].split(';')
     print acceleration
     acceleration[0] = str(-0.15*int(acceleration[0])+52)
