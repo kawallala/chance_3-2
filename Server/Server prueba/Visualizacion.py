@@ -23,9 +23,9 @@ for line in datos:
     T.append(line[2])
 
 t = [t for t in range(len(accx))]
-plt.plot(t,accx)
-plt.plot(t,accy)
-plt.plot(t,accz)
+plt.plot(t , accx)
+plt.plot(t , accy)
+plt.plot(t , accz)
 plt.xlabel('Tiempo [s]')
 plt.ylabel('acceleracion eje x [m/s^2]')
 plt.show()
