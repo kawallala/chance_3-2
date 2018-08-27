@@ -2,6 +2,8 @@ from turtle import*
 
 
 def mapeo(nombre,y,z):
+    speed(1)
+    vel = 1
     archivo = open(nombre, 'r')
     to = 0
     for line in archivo:
@@ -10,16 +12,15 @@ def mapeo(nombre,y,z):
       estado = line[1]
       #temperatura = float(line[2])
       #temperatura = temperatua * 0.48828125 * 10 // 10
-      vel = float(line[3])
-      dt = 10 * (float(line[4]) - to)
-      to = float(line[4])
+      dt = 10 * (float(line[3]) - to)
+      to = float(line[3])
       if estado == '8':
         fd(vel * dt)
       if estado == '4':
-        lt(vel * dt * 90 / 17.7)
+        lt(vel * dt * 110 / 17.7)
       if estado == '6':
-        rt(vel * dt * 90 / 17.7)
+        rt(vel * dt * 110 / 17.7)
       if estado == '2':
-        bd(vel * dt)
+        backward(vel * dt)
         
         
