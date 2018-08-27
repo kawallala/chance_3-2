@@ -1,11 +1,10 @@
-# coding=utf-8
+# importamos librerias necesarias para el funcionamiento del robot ##
 
-# importamos librerias necesarias
-import socket
+import socket  
 from serial import *
 
 # variables necesarias para la iniciacion
-host = ''
+
 port = 10001
 ser = Serial('/dev/ttyUSB0', 115200)
 data_old = ['5',"90","12"]
@@ -95,7 +94,7 @@ def data_transfer(conn):
     dataTransfer(conn): conn -> None
 
     Metodo que recibe la conexion realizada anterormente e inicializa la comunicacion con la misma, esperando a
-    recibir un mensaje, se escribe en el serial el codigo correspondiente para la acciÃ³n requerida
+    recibir un mensaje, se escribe en el serial el codigo correspondiente para la acción requerida
     """
     while True:
         global data_old   

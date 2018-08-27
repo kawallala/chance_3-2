@@ -1,4 +1,4 @@
-## Librerias utilizadas para el funcionamientoo del reobot ##
+## Librerias utilizadas para el funcionamientoo del robot ##
 
 import socket  ## Nos permite conectarnos por internet ##
 import Tkinter as Tk  ## Nos permite crear una ventana para la GUI ##
@@ -6,7 +6,7 @@ import time  ## Nos permite saber el "tiempo" ##
 from PIL import Image, ImageTk ## Nos permite ver imagenes en la GUI ##
 
 
-## Constantes utilizadas ##
+## Variabless utilizadas ##
 
 
 ## Nos dice el momento en el que abrimos nuestro programa ##
@@ -41,58 +41,87 @@ texto = open(nombre, 'w')
 ## respectivamente
 
 
-# None -> None
+
 def fwd():
+    """
+    fwd(): None -> None
+
+    Funcion que cambia la variable estado a 8.
+
+    """
     global estado
     estado = 8
     ESTADO.config(text="Avanzando")
     return
 
-
-# None -> None
 def let():
+    """
+    let(): None -> None
+
+    Funcion que cambia la variable estado a 4.
+
+    """
     global estado
     estado = 4
     ESTADO.config(text="Izquierda")
     return
 
-
-# None -> None
 def sto():
+    """
+    sto(): None -> None
+
+    Funcion que cambia la variable estado a 5.
+
+    """
     global estado
     estado = 5
     ESTADO.config(text="Detenido")
     return
 
-
-# None -> None
 def rit():
+    """
+    rit(): None -> None
+
+    Funcion que cambia la variable estado a 6.
+
+    """
     global estado
     estado = 6
     ESTADO.config(text="Derecha")
     return
 
-
-# None -> None
 def bwd():
+    """
+    bwd(): None -> None
+
+    Funcion que cambia la variable estado a 2.
+
+    """
     global estado
     estado = 2
     ESTADO.config(text="Retrocediendo")
     return
 
 
-# Esta funcion cierra la ventana
-# None -> None
 def cl():
+    """
+    cl(): None -> None
+
+    Esta funcion hace que se cierre la ventana.
+
+    """
     s.send(str.encode("CLOSE"))
     vent.destroy()
     return
 
 
-# Esta funcion lee el slider que hay en la ventana y cambia la variable cam 
-# antes mencionada
-# None -> None
 def camara(event):
+    """
+    camara(): event -> None
+
+    Funcion que cambia la variable cam para mover la camara.
+
+    """
     global cam
     a = fast1.get()
     cam = str(90 + a)
@@ -181,24 +210,45 @@ fast1 = Tk.Scale(giro, orient=Tk.HORIZONTAL, command=camara, resolution=10, from
 fast1.set(0)
 fast1.pack(side=Tk.RIGHT)
 
+
+# Esta funcion nos dice el tiempo que lleva abierta nuestra ventana
+# None -> None
+
 def add_time():
+    """
+    add_time(): None -> None
+
+    Esta funcion cambia el Label rolex en la ventana para que muestre el tiempo
+    que lleva abierta la ventana. 
+    
+    """
     tiempo = str(int(time.time()) - tinicial - 1)
     rolex.config(text=tiempo)
     vent.after(500, add_time)
 
+# Esta funcion le envia a la raspberry las variables estado y cam para que
+# se mueva el robot o se mueva la camara
+# None -> String
+
 def sensor():
+    """
+    sensor(): None -> String
+    
+    Esta funcion le envia  las variables estado y cam al servidor, recibe un
+    las mediciones de los sensores y las escribe en un archivo de texto 
+    
+    """
     global estado,cam
-    message = str(estado) + '/' + str(cam) + '/' + str(vel) 
+    message = str(estado) + '/' + str(cam) 
     s.send(message)
     men = s.recv(1024)
 
-    texto.write(men[0:len(men)-1] + '/' + str(vel) + '/' + str(time.time()-tinicial) + ']' + '\n')
+    texto.write(men[0:len(men)-1] + '/' + str(time.time()-tinicial) + ']' + '\n')
 
     data = men[1:len(men)-1]
     data = data.split('/')
 
     acceleration = data[0].split(';')
-    print acceleration
     acceleration = acceleration[0] + " X - " + acceleration[1] + " Y - " + acceleration[2] + " Z"
     accel.config(text=str(acceleration))
 
