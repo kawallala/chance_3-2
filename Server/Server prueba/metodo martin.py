@@ -1,4 +1,4 @@
-## Librerias utilizadas para el funcionamientoo del reobot ##
+## Librerias utilizadas para el funcionamientoo del robot ##
 
 import socket  ## Nos permite conectarnos por internet ##
 import Tkinter as Tk  ## Nos permite crear una ventana para la GUI ##
@@ -14,7 +14,7 @@ tinicial = int(time.time())
 
 
 ## La direccion ip de la raspberry pi, y el ppuerto por el que nos conectamos ##
-host = '192.168.43.46'
+host = '172.30.1.1'
 port = 10001
 
 
@@ -211,6 +211,9 @@ def sensor():
     #print data
     acceleration = data[0].split(';')
     print acceleration
+    acceleration[0] = str(-0.15*int(acceleration[0])+52)
+    acceleration[1] = str(-0.15*int(acceleration[1])+50.01)
+    acceleration[2] = str(-0.14*int(acceleration[2])+47.7)
     acceleration = acceleration[0] + " X - " + acceleration[1] + " Y - " + acceleration[2] + " Z"
     accel.config(text=str(acceleration))
 
