@@ -6,7 +6,7 @@ from serial import *
 
 # variables necesarias para la iniciacion
 host = ''
-port = 10000
+port = 10001
 ser = Serial('/dev/ttyUSB0', 115200)
 data_old = ['5',"90","12"]
 
@@ -83,7 +83,7 @@ def dataCompare(data1,data2):
                     ser.write('Bwd.')
                     print 'retrocediendo'
             elif i == 1:
-                a = int(data1[1])/(-10)
+                a = int(data1[1])/10
                 print 'c' + str(a) + '.'
                 ser.write('c' + str(a) + '.')
             elif i == 2:
