@@ -10,21 +10,22 @@ accy = []
 accz = []
 T = []
 t = []
+i = 0
 for line in datos:
-    line = line[1:len(line)-2]
-    line = line.split('/')
-
-    pos.append(line[1])
-    acceleraciones = line[0].split(';')
-    acceleraciones[0] = -0.15 * int(acceleraciones[0]) + 52
-    acceleraciones[1] = -0.15 * int(acceleraciones[1]) + 50.01
-    acceleraciones[2] = -0.14 * int(acceleraciones[2]) + 47.7
-    accx.append(acceleraciones[0])
-    accy.append(acceleraciones[1])
-    accz.append(acceleraciones[2])
-    T.append(float(line[2]))
-    t.append(float(line[4]))
-
+    if i > 50:
+        line = line[1:len(line)-2]
+        line = line.split('/')
+        pos.append(line[1])
+        acceleraciones = line[0].split(';')
+        acceleraciones[0] = -0.15 * int(acceleraciones[0]) + 52
+        acceleraciones[1] = -0.15 * int(acceleraciones[1]) + 50.01
+        acceleraciones[2] = -0.14 * int(acceleraciones[2]) + 47.7
+        accx.append(acceleraciones[0])
+        accy.append(acceleraciones[1])
+        accz.append(acceleraciones[2])
+        T.append(float(line[2]))
+        t.append(float(line[3]))
+    i+=1
 maxacc=max([max(accx), max(accy), max(accz)])
 minacc=min([min(accx), min(accy), min(accz)])
 tmin = min(t)
