@@ -178,7 +178,7 @@ marco4.pack()
 acelerometro = Tk.Label(marco4, text="Acelerometro =")
 acelerometro.pack(side=Tk.LEFT)
 
-accel = Tk.Label(marco4, text="      ")
+accel = Tk.Label(marco4, width=30, text="      ")
 accel.pack(side=Tk.LEFT)
 
 temperatura = Tk.Label(marco4, text="Temperatura =")
